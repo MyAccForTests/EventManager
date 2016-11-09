@@ -1,0 +1,18 @@
+
+The app.js file is the entry-point of your application.
+
+The package.json file contains all of your dependencies and various details regarding your project.
+
+The bin folder should contain the various configuration startup scripts for your application.
+
+For example, instead of applying all the Express middleware in the app.js file, you module.exports = {} them from their own configuration file and require them in app.js. [additional info LINK]
+
+The views folder contains all of your server-side views.
+
+The public folder contains all of your front-end code.
+
+The routes folder contains all the routes that you have created for your application.
+
+As stated in the official documentation, be aware that this is just one way to organize your code.
+
+You should test it out and see if it fits your project.

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Manager</title>
+    <script src="./javascripts/login.js"></script>
+	<link type="text/css" rel="stylesheet" href="./stylesheets/login.css">
+</head>
+<body>
+<div id="mainContainer">
+	<div id="loginContainer">
+		<form method="POST" action="http://localhost:6560/" onsubmit="return loginSubmit()">
+			<input name="email" type="email" id="email" placeholder="Email" required>
+			<br><input name="pass" type="text" id="pass" placeholder="Password" visibility="hidden">
+			<br><input type="submit" value="Continue">
+		</form>
+	</div>
+</div>
+</body>
+</html>
