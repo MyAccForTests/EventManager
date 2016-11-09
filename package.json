@@ -1,0 +1,27 @@
+{
+  "name": "eventmanager",
+  "version": "1.0.0",
+  "description": "Service for creating and subscriding events.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tequati/EventManager.git"
+  },
+  "keywords": [
+    "event",
+    "group",
+    "event"
+  ],
+  "author": "Ilya",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tequati/EventManager/issues"
+  },
+  "homepage": "https://github.com/Tequati/EventManager#readme",
+  "dependencies": {
+    "express": "^4.14.0"
+  }
+}
