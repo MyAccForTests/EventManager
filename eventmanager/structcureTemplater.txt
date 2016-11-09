@@ -1,3 +1,23 @@
+node js
+express
+POST parser
+mysql
+
+
+
+
+https://www.quora.com/How-do-I-create-a-login-page-in-Node-js-with-MySQL-in-Express
+
+http://kitchen.braitsch.io/building-a-login-system-in-node-js-and-mongodb/
+
+
+
+
+
+
+
+
+
 
 The app.js file is the entry-point of your application.
 

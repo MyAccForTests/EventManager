@@ -1,11 +1,13 @@
 var express = require('express');
-var router = express.Router();
+var routes = express.Router();
 
-/* GET home page. */
-router.post('/', function(req, res, next) {
+routes.post('/', function(req, res) {
+
 	console.log(req.body.email+" "+req.body.pass);
-	
+	/*
+	SQL_Connection
+	*/
 	res.send("Hello World!");
 });
 
-module.exports = router;
+module.exports = routes;
