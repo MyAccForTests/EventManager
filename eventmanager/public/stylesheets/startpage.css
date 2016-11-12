@@ -1,0 +1,25 @@
+body, html, .container-fluid{
+     height: 100%; 
+}
+.row
+{
+	height: 25%;
+}
+.buttonCol, .textCol
+{
+	height: 100%;
+	display:table;
+}
+.buttonForm, .textDiv
+{
+	display: table-cell;
+	vertical-align: middle;
+}
+.textCol
+{
+	text-align:center;
+	font-size:40px;
+}
+
+
+

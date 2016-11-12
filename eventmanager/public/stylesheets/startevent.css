@@ -1,0 +1,24 @@
+body, html, .container-fluid{
+     height: 100%;	 
+}
+#description
+{
+	resize: none;
+}
+#firstRow, #thirdRow
+{
+	height: 20%;
+}
+#secondRow
+{
+	height:60%;
+}
+
+
+
+
+
+.row
+{
+	border: 1px solid;
+}
