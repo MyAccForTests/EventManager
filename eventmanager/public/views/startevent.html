@@ -22,18 +22,60 @@
 	<div class="row" id="secondRow">
 	<div class="col-md-3"></div>
 	<div class="col-md-6">
-	<form method="POST" action="http://localhost:6560/startevent" onsubmit="return eventSubmit()">
+	<form method="POST" action="http://localhost:6560/startevent/create" enctype="multipart/form-data" onsubmit="return eventSubmit()">
 		<div class="form-group">
 			<label for="title">
-				Title of your event:
+				Event title:
 			</label>
-			<input type="text" id="title" placeholder="Event title" class="form-control">
+			<input type="text" id="title" name="title" placeholder="Event title" class="form-control">
 		</div>
 		<div class="form-group">
 			<label for="description" >
-				Full description of your event:
+				Full event description:
 			</label>
-			<textarea rows="8" id="description" placeholder="Event description" class="form-control"></textarea>
+			<textarea rows="8" id="description" name="description" placeholder="Event description" class="form-control"></textarea>
+		</div>
+		<div class="form-group">
+			<label for="email">
+				Your E-mail:
+			</label>
+			<input type="email" id="email" name="email" placeholder="E-mail" class="form-control">
+		</div>
+		<div class="form-group">
+			<label for="name">
+				Your name:
+			</label>
+			<input type="text" id="name" name="name" placeholder="Name" class="form-control">
+		</div>
+		<div class="form-group">
+			<label for="date">
+				Event date:
+			</label>
+			<input type="datetime-local" id="date" name="date" placeholder="Event date" class="form-control">
+		</div>
+		<div class="form-group">
+			<label for="datereg">
+				Last registration date:
+			</label>
+			<input type="datetime-local" id="datereg" name="datereg" placeholder="Last registration date" class="form-control">
+		</div>
+		<div class="form-group">
+			<label for="capacity">
+				Event capacity:
+			</label>
+			<input type="text" id="capacity" name="capacity" placeholder="Event capacity" class="form-control">
+		</div>
+		<div class="form-group">
+			<label for="price">
+				Event price:
+			</label>
+			<input type="number" min="0.00" step="0.01" id="price" name="price" placeholder="Event price" class="form-control">
+		</div>
+		<div class="form-group">
+			<label for="img">
+				Image:
+			</label>
+		<input type="file" id="img" name="img" accept="image/*">
 		</div>
 		<button type="submit" class="btn btn-success btn-block">Create Event</button>
 	</form>

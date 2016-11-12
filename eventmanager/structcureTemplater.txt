@@ -1,17 +1,8 @@
-node js
-express
-POST parser
-mysql
-
-
-
-
-https://www.quora.com/How-do-I-create-a-login-page-in-Node-js-with-MySQL-in-Express
-
-http://kitchen.braitsch.io/building-a-login-system-in-node-js-and-mongodb/
-
-
-
+npm install express --save		--->express
+npm install body-parser			--->POST parser
+npm install mysql			--->mysql
+npm install password-generator -g	--->memorable password generator
+npm install --save multer		--->file uploader
 
 
 

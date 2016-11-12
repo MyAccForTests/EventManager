@@ -7,18 +7,23 @@ body, html, .container-fluid{
 }
 #firstRow, #thirdRow
 {
-	height: 20%;
+	height: 5%;
 }
 #secondRow
 {
-	height:60%;
+	height:90%;
 }
 
 
 
 
-
+/*
 .row
 {
 	border: 1px solid;
 }
+.col-md-6, .col-md-4
+{
+	border: 1px solid;
+}
+*/
