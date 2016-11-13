@@ -14,7 +14,7 @@ routes.post('/create',upload.single('img'), function(req, res) {
 	var person=new Person(req.body.name, req.body.email);
 	console.log(person);
 	
-	var pass=generatePassword();
+	var pass=generatePassword(6, true);
 	var lnk="i/"+generatePassword(11, false);
 	var ownlnk="o/"+generatePassword(11, false);
 	var dateEventLong=Date.parse(req.body.date);
@@ -24,97 +24,21 @@ routes.post('/create',upload.single('img'), function(req, res) {
 	var eve=new Event(req.body.title, pass, req.body.description, person, req.body.capacity, req.body.price, dateEventLong, dateRegLong, ownlnk, lnk ,imgLink);
 	console.log(eve);
 	
-	
-	/*
-	var personSQL="INSERT INTO person (Name, Email) VALUES ("+person.name+", "+person.email+");";
-	var person.id=connection.query("SELECT id FROM person WHERE ")
-	var eventSQL="INSERT INTO event (eve.title, eve.pass, eve. description, 0";
-	
-	
-	
-	var sqlColE="INSERT INTO event (";
-	var sqlValE="VALUES ("
-	
-	var sqlColP="INSERT INTO event (";
-	var sqlValP="VALUES ("
-	
-	if(title != "")
-	{
-		sqlValE+=","+title;
-		sqlColE+="Title,"
-	}
-	if(description != "")
-	{
-		sqlValE+=description+",";
-		sqlColE+="Description,"
-	}
-	if(date != "")
-	{
-		sqlValE+=date+",";
-		sqlColE+="Date,"
-	}
-	if(capacity != "")
-	{
-		sqlValE+=capacity+",";
-		sqlColE+="Capacity,"
-	}
-	if(price != "")
-	{
-		sqlValE+=price+",";
-		sqlColE+="Price,"
-	}
-	if(datereg != "")
-	{
-		sqlValE+=datereg+",";
-		sqlColE+="Deadline,"
-	}
-	if(img != "")
-	{
-		sqlValE+=img+",";
-		sqlColE+="Link,"
-	}
-	var sql = sqlColE+") "+sqlValE+");";
-	*/
-	
-	/*
-	console.log(title);
-	console.log(description);
-	console.log(email);
-	console.log(name);
-	console.log(date);
-	console.log(datereg);
-	console.log(capacity);
-	console.log(price);
-	console.log(img);
-	
-	console.log(sql);
-	*/
-	/*
-	console.log(req.body.title);
-	console.log(req.body.description);
-	console.log(req.body.email);
-	console.log(req.body.name);
-	console.log(req.body.date);
-	console.log(req.body.datereg);
-	console.log(req.body.price);
-	console.log(req.body.img);
-	console.log(req.body);
-	*/
-	
-	pool.getConnection(function(err, connection) {
-	var id;
-	if(connection.threadId===undefined) {id="no connection to database";} else{id=connection.threadId};
-	console.log('connected as id ' + id);
-	
-	connection.release();
-	console.log('connection released');
-	});
-	
 	res.send("Suceed");
-	res.end;
 });
 
-routes.post('/mail',upload.single('img'), function(req, res) {
+routes.post('/mail', function(req, res) {
+	var person=new Person(req.body.name, req.body.email);
+	console.log(person.email);
+	
+	
+	DBConnection.getPersonByEmail("aaa@bbb.ccc", 
+	function(user){
+		console.log(user)
+		
+		res.end();
+		
+	});
 });
 
 module.exports = routes;
