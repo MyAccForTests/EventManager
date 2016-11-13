@@ -2,16 +2,17 @@
 window.addEventListener("load",function()
 {
 	var now=new Date();
-	var tomorrow=now.getFullYear()+"-"+(now.getMonth()+1)+"-"+(now.getDate()+1)+"T"+now.getHours()+":00"+":00";
-	var min=now.getFullYear()+"-"+(now.getMonth()+1)+"-"+now.getDate()+"T"+(now.getHours()-1)+":00"+":00";
-	var max=(now.getFullYear()+100)+"-"+(now.getMonth()+1)+"-"+now.getDate()+"T"+now.getHours()+":00"+":00";
-	$("#date").val(tomorrow);
-	$("#datereg").val(tomorrow);
-	$("#date").attr("min", min);
-	$("#date").attr("max", max);
-	$("#datereg").attr("min", min);
-	$("#datereg").attr("max", max);
+	var min=new Date(Date.UTC(now.getFullYear(),now.getMonth(),now.getDate(),now.getHours(),0,0));
+	var max=new Date(Date.UTC(now.getFullYear()+100,now.getMonth(),now.getDate(),now.getHours(),0,0));
+	var tomorrow=new Date(Date.UTC(now.getFullYear(),now.getMonth(),now.getDate()+1,now.getHours(),0,0));
+	$("#date").val(tomorrow.toISOString().slice(0,16));
+	$("#datereg").val(tomorrow.toISOString().slice(0,16));
+	$("#date").attr("min", min.toISOString().slice(0,16));
+	$("#date").attr("max", max.toISOString().slice(0,16));
+	$("#datereg").attr("min", min.toISOString().slice(0,16));
+	$("#datereg").attr("max", max.toISOString().slice(0,16));
 	symbCount();
+	regDateSet()
 });
 function regDateSet()
 {
