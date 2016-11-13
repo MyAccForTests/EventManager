@@ -1,4 +1,5 @@
-body, html, .container-fluid{
+body, html, .container-fluid
+{
      height: 100%;	 
 }
 #description
@@ -13,17 +14,3 @@ body, html, .container-fluid{
 {
 	height:90%;
 }
-
-
-
-
-/*
-.row
-{
-	border: 1px solid;
-}
-.col-md-6, .col-md-4
-{
-	border: 1px solid;
-}
-*/

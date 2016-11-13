@@ -15,8 +15,8 @@ routes.post('/create',upload.single('img'), function(req, res) {
 	console.log(person);
 	
 	var pass=generatePassword();
-	var lnk="g"+generatePassword(11, false);
-	var ownlnk="o"+generatePassword(11, false);
+	var lnk="i/"+generatePassword(11, false);
+	var ownlnk="o/"+generatePassword(11, false);
 	var dateEventLong=Date.parse(req.body.date);
 	var dateRegLong=Date.parse(req.body.datereg);
 	var imgLink="";
@@ -100,8 +100,11 @@ routes.post('/create',upload.single('img'), function(req, res) {
 	console.log(req.body.img);
 	console.log(req.body);
 	*/
+	
 	pool.getConnection(function(err, connection) {
-	console.log('connected as id ' + connection.threadId);
+	var id;
+	if(connection.threadId===undefined) {id="no connection to database";} else{id=connection.threadId};
+	console.log('connected as id ' + id);
 	
 	connection.release();
 	console.log('connection released');
@@ -109,6 +112,9 @@ routes.post('/create',upload.single('img'), function(req, res) {
 	
 	res.send("Suceed");
 	res.end;
+});
+
+routes.post('/mail',upload.single('img'), function(req, res) {
 });
 
 module.exports = routes;

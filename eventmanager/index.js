@@ -4,7 +4,6 @@ var app = express();
 var port = 6560;
 
 var bodyParser = require('body-parser');
-
 var mysql      = require('mysql');
 global.pool  = mysql.createPool({
 	host     : '5.19.139.120',
@@ -13,8 +12,8 @@ global.pool  = mysql.createPool({
 	password : 'EventManagerUser2016',
 	database : 'EventOrganiser'
 	});
-global.Person = require('./routes/classes/person');
-global.Event = require('./routes/classes/event')
+global.Person = require('./modules/person');
+global.Event = require('./modules/event')
 
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies

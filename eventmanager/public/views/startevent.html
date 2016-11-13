@@ -22,54 +22,55 @@
 	<div class="row" id="secondRow">
 	<div class="col-md-3"></div>
 	<div class="col-md-6">
-	<form method="POST" action="http://localhost:6560/startevent/create" enctype="multipart/form-data" onsubmit="return eventSubmit()">
+	<form method="POST" action="http://localhost:6560/startevent/create" enctype="multipart/form-data">
 		<div class="form-group">
 			<label for="title">
 				Event title:
 			</label>
-			<input type="text" id="title" name="title" placeholder="Event title" class="form-control">
+			<input type="text" id="title" name="title" placeholder="Name for event, required" class="form-control" maxlength="50" autocomplete="false" required>
 		</div>
 		<div class="form-group">
 			<label for="description" >
 				Full event description:
 			</label>
-			<textarea rows="8" id="description" name="description" placeholder="Event description" class="form-control"></textarea>
+			<textarea rows="8" oninput="symbCount()" id="description" name="description" placeholder="Up to 5000 symbols, required" class="form-control" maxlength="5000" autocomplete="false" required></textarea>
+			<p id="leftSym" class="text-right text-info small"></p>
 		</div>
 		<div class="form-group">
 			<label for="email">
 				Your E-mail:
 			</label>
-			<input type="email" id="email" name="email" placeholder="E-mail" class="form-control">
+			<input type="email" id="email" onlosefocus="checkNameInBase()" name="email" placeholder="aaa@bbb.com, required" class="form-control" maxlength="50" required>
 		</div>
 		<div class="form-group">
 			<label for="name">
 				Your name:
 			</label>
-			<input type="text" id="name" name="name" placeholder="Name" class="form-control">
+			<input type="text" id="name" name="name" placeholder="Name, required" class="form-control" maxlength="50" autocomplete="false" required>
 		</div>
 		<div class="form-group">
 			<label for="date">
 				Event date:
 			</label>
-			<input type="datetime-local" id="date" name="date" placeholder="Event date" class="form-control">
+			<input type="datetime-local" onchange="regDateSet()" id="date" name="date" class="form-control"  min="1899-01-01T00:00:00" max="2200-13-13T23:59:59" autocomplete="false" required>
 		</div>
 		<div class="form-group">
 			<label for="datereg">
 				Last registration date:
 			</label>
-			<input type="datetime-local" id="datereg" name="datereg" placeholder="Last registration date" class="form-control">
+			<input type="datetime-local" id="datereg" name="datereg" class="form-control" min="1899-01-01T00:00:00" max="2200-13-13T23:59:59" autocomplete="false" required>
 		</div>
 		<div class="form-group">
 			<label for="capacity">
 				Event capacity:
 			</label>
-			<input type="text" id="capacity" name="capacity" placeholder="Event capacity" class="form-control">
+			<input type="number" id="capacity" name="capacity" min="0" step="1" placeholder="Max number of guests" class="form-control" min="0" autocomplete="false" max="1000000000">
 		</div>
 		<div class="form-group">
 			<label for="price">
 				Event price:
 			</label>
-			<input type="number" min="0.00" step="0.01" id="price" name="price" placeholder="Event price" class="form-control">
+			<input type="number" min="0.00" step="0.01" id="price" name="price" placeholder="0.00" class="form-control" min="0" autocomplete="false" max="1000000000">
 		</div>
 		<div class="form-group">
 			<label for="img">
