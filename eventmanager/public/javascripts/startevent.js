@@ -1,4 +1,5 @@
 "use strict"
+var servAdress="http://localhost:6560/startevent";
 window.addEventListener("load",function()
 {
 	var now=new Date();
@@ -13,6 +14,7 @@ window.addEventListener("load",function()
 	$("#datereg").attr("max", max.toISOString().slice(0,16));
 	symbCount();
 	regDateSet()
+	$("#eventForm").attr("action",servAdress+"/create");
 });
 function regDateSet()
 {
@@ -29,5 +31,28 @@ function symbCount()
 function checkNameInBase()
 {
 	var email=$("#email").val();
-	
+	var user=new Person("", email);
+	var req=JSON.stringify(user);
+	var xhr = new XMLHttpRequest();
+	xhr.open("POST", servAdress+"/email", true);
+	xhr.setRequestHeader("Content-Type", "application/json");
+	xhr.onreadystatechange = function(){
+		if (xhr.readyState == 4 && xhr.status == 200) {
+			var user=new Person(JSON.parse(xhr.responseText).name, JSON.parse(xhr.responseText).email);
+			if(user.email!=""&&user.name!="")
+			{
+				$("#name").val(user.name);
+			}
+		};
+	};
+	xhr.send(req);
+}
+
+class Person
+{
+	constructor(name, email)
+	{
+		this.name=name;
+		this.email=email;
+	}
 }

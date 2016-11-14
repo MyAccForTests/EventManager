@@ -11,33 +11,39 @@ routes.get('/', function(req, res) {
 });
 
 routes.post('/create',upload.single('img'), function(req, res) {
-	var person=new Person(req.body.name, req.body.email);
-	console.log(person);
+	var name=req.body.name;
+	var email=req.body.email;
 	
-	var pass=generatePassword(6, true);
-	var lnk="i/"+generatePassword(11, false);
-	var ownlnk="o/"+generatePassword(11, false);
-	var dateEventLong=Date.parse(req.body.date);
-	var dateRegLong=Date.parse(req.body.datereg);
+	var person=new Person(name, email);
+	console.log(person);
+	/*-----------------------------------------*/
+	var title=req.body.title;
+	var description=req.body.description;
+	var capacity=req.body.capacity;
+	var price=req.body.price;
 	var imgLink="";
 	if(req.file===undefined){}else{imgLink=req.file.path;};
-	var eve=new Event(req.body.title, pass, req.body.description, person, req.body.capacity, req.body.price, dateEventLong, dateRegLong, ownlnk, lnk ,imgLink);
+	
+	var dateEventLong=Date.parse(req.body.date);
+	var dateRegLong=Date.parse(req.body.datereg);
+	
+	var pass=generatePassword(6, true);
+	var invLnk="i/"+generatePassword(11, false);
+	var ownlnk="o/"+generatePassword(11, false);
+	
+	var eve=new Event(title, pass, description, person, capacity, price, dateEventLong, dateRegLong, ownlnk, invLnk ,imgLink);
 	console.log(eve);
+	/*-----------------------------------------*/
 	
 	res.send("Suceed");
 });
 
-routes.post('/mail', function(req, res) {
-	var person=new Person(req.body.name, req.body.email);
-	console.log(person.email);
-	
-	
-	DBConnection.getPersonByEmail("aaa@bbb.ccc", 
+routes.post('/email', function(req, res) {
+	var person=new Person(req.body.name,req.body.email);
+	DBConnection.getPersonByEmail(person, 
 	function(user){
-		console.log(user)
-		
-		res.end();
-		
+		res.setHeader('Content-Type', 'application/json');
+		res.send(JSON.stringify(user));
 	});
 });
 

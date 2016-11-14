@@ -1,0 +1,7 @@
+{
+"host"     : "5.19.139.120",
+"port"	   : "3306",
+"user"     : "EventManagerUser",
+"password" : "EventManagerUser2016",
+"database" : "EventOrganiser"
+}
