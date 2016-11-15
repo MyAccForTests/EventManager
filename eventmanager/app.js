@@ -10,7 +10,8 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 /*-----------------------------------------*/
 global.Person = require('./modules/person');
 global.Event = require('./modules/event');
-global.DBConnection = require('./modules/dbconnection');
+global.DBConnection = require('./modules/mysqlconnection');
+global.incPostParser = require('./modules/incPostParser');
 /*-----------------------------------------*/
 app.use(express.static('public'));
 
@@ -25,5 +26,5 @@ fs.readFile('./settings/settings_serv_port.txt','utf8',function (err,data) {
     return console.log(err);
   }
   var port  = JSON.parse(data).port;
-  app.listen(port, function(){console.log("server started at port:"+port);});
+  app.listen(port, function(){console.log('server started at port:'+port);});
 });

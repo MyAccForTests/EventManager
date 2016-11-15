@@ -3,6 +3,7 @@ class Person
 {
 	constructor(name, email)
 	{
+		this.id="";
 		this.name=name;
 		this.email=email;
 	}

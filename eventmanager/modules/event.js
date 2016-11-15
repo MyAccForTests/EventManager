@@ -3,6 +3,7 @@ class Event
 {
 	constructor(title, pass, description, owner, capacity, price, date, datereg, ownlnk, lnk, img)
 	{
+		this.id="";
 		this.title=title;
 		this.pass=pass;
 		this.description=description;

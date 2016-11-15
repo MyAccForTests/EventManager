@@ -5,41 +5,33 @@ var path = require('path');
 var generatePassword = require('password-generator');
 var multer  = require('multer');
 var upload = multer({dest: './public/userimages/', rename: function (fieldname, filename) {return Date.now()+generatePassword(4,true)+filename}})
+var routes
 
 routes.get('/', function(req, res) {
 	res.sendFile(path.resolve(__dirname + '/../public/views/startevent.html'));
 });
 
 routes.post('/create',upload.single('img'), function(req, res) {
-	var name=req.body.name;
-	var email=req.body.email;
-	
-	var person=new Person(name, email);
-	console.log(person);
-	/*-----------------------------------------*/
-	var title=req.body.title;
-	var description=req.body.description;
-	var capacity=req.body.capacity;
-	var price=req.body.price;
-	var imgLink="";
-	if(req.file===undefined){}else{imgLink=req.file.path;};
-	
-	var dateEventLong=Date.parse(req.body.date);
-	var dateRegLong=Date.parse(req.body.datereg);
-	
+	var person=incPostParser.parsePerson(req);
+	var ev=incPostParser.parseEvent(req);
 	var pass=generatePassword(6, true);
-	var invLnk="i/"+generatePassword(11, false);
+	var lnk="i/"+generatePassword(11, false);
 	var ownlnk="o/"+generatePassword(11, false);
+	ev.pass=pass;
+	ev.ownlnk=ownlnk;
+	ev.lnk=lnk;
 	
-	var eve=new Event(title, pass, description, person, capacity, price, dateEventLong, dateRegLong, ownlnk, invLnk ,imgLink);
-	console.log(eve);
-	/*-----------------------------------------*/
-	
+	console.log(person);
+	console.log(ev);
+	DBConnection.putEvent(ev,function(result)
+	{
+		console.log(result.id);
+	});
 	res.send("Suceed");
 });
 
 routes.post('/email', function(req, res) {
-	var person=new Person(req.body.name,req.body.email);
+	var person=req.body;
 	DBConnection.getPersonByEmail(person, 
 	function(user){
 		res.setHeader('Content-Type', 'application/json');

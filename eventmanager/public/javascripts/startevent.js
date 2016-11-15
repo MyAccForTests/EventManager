@@ -47,12 +47,29 @@ function checkNameInBase()
 	};
 	xhr.send(req);
 }
-
+/*-----------------------------------------*/
 class Person
 {
 	constructor(name, email)
 	{
 		this.name=name;
 		this.email=email;
+	}
+}
+class Event
+{
+	constructor(title, pass, description, owner, capacity, price, date, datereg, ownlnk, lnk, img)
+	{
+		this.title=title;
+		this.pass=pass;
+		this.description=description;
+		this.owner=owner;
+		this.capacity=capacity;
+		this.price=price;
+		this.date=date;
+		this.datereg=datereg;
+		this.ownlnk=ownlnk;
+		this.lnk=lnk;
+		this.img=img;
 	}
 }
