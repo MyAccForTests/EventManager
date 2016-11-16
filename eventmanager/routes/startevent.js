@@ -5,7 +5,6 @@ var path = require('path');
 var generatePassword = require('password-generator');
 var multer  = require('multer');
 var upload = multer({dest: './public/userimages/', rename: function (fieldname, filename) {return Date.now()+generatePassword(4,true)+filename}})
-var routes
 
 routes.get('/', function(req, res) {
 	res.sendFile(path.resolve(__dirname + '/../public/views/startevent.html'));
@@ -20,13 +19,15 @@ routes.post('/create',upload.single('img'), function(req, res) {
 	ev.pass=pass;
 	ev.ownlnk=ownlnk;
 	ev.lnk=lnk;
-	
-	console.log(person);
+	console.log("incoming event:");
 	console.log(ev);
+	/*
 	DBConnection.putEvent(ev,function(result)
 	{
-		console.log(result.id);
+		console.log("inserted event, id: "+result.insertId);
 	});
+	emailSender.sendPassNotification(ev);
+	*/
 	res.send("Suceed");
 });
 

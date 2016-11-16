@@ -3,7 +3,7 @@ npm install body-parser					--->POST parser
 npm install mysql						--->mysql
 npm install password-generator -g		--->memorable password generator
 npm install --save multer				--->file uploader
-
+npm install nodemailer					--->email sender
 
 
 

@@ -1,0 +1,24 @@
+{
+"server"	:	{
+					"address"  : "http://localhost:6560/",
+					"port"     : "6560"
+				},
+
+"database"	:	{
+					"host"     : "5.19.139.120",
+					"port"	   : "3306",
+					"user"     : "EventManagerUser",
+					"password" : "EventManagerUser2016",
+					"database" : "EventOrganiser"
+				},
+
+"mail"	:		{
+					"host"	: 	"smtp.mail.ru",
+					"port"	: 	"465",
+					"secure":	 "true",
+					"auth"	: 	{
+									"user"	: 	"event_notifier@mail.ru",
+									"pass"	: 	"NotifManager2016"
+								}
+				}
+}

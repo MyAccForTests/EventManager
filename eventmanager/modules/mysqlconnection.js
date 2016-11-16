@@ -1,16 +1,9 @@
 "use strict"
 var express = require('express');
-var mysql      = require('mysql');
-var fs = require('fs');
-var pool;
-fs.readFile('./settings/settings_db.txt','utf8',function (err,data) {
-  if (err) {
-    return console.log(err);
-  }
-  pool  = mysql.createPool(JSON.parse(data));
-});
-
-var putPerson = function(person, cb)
+var mysql = require('mysql');
+var pool = mysql.createPool(servSettings.database);
+  
+var putPerson = function(person, res)
 {
 	pool.getConnection(function(err, connection) {
 		if(err) {console.log('cannot estabilish connection for putPerson()');} else{console.log('connected for putPerson() as id '+connection.threadId);};
@@ -21,51 +14,70 @@ var putPerson = function(person, cb)
 				else{console.log('putting to db for putPerson() successful')}
 				connection.release();
 				console.log('connection released for putPerson()');
-				cb(result);
+				res(result);
 			});
 		});
-
 }
 
-var putEvent = function(ev,cb)
+var updatePersonName = function(person, res)
+{
+	pool.getConnection(function(err, connection) {
+		if(err) {console.log('cannot estabilish connection for updatePerson()');} else{console.log('connected for updatePerson() as id '+connection.threadId);};
+		connection.query('UPDATE person SET name=? WHERE email=?', [[person.name],[person.email]],
+			function(err, result)
+			{
+				if(err) {console.log('query from updatePerson() unsuccessful');}
+				else{console.log('putting to db for updatePerson() successful')}
+				connection.release();
+				console.log('connection released for updatePerson()');
+				res(result);
+			});
+		});
+}
+
+var putEvent = function(ev,res)
 {
 	pool.getConnection(function(err, connection) {
 		if(err) {console.log('cannot estabilish connection for putEvent()');} else{console.log('connected for putEvent() as id '+connection.threadId);};
+			if(ev.owner==""||ev.owner===undefined) ev.owner=new Person("","");
 			getPersonByEmail(ev.owner,
 			function(user)
 			{
-				var addEve=function(id) {connection.query('INSERT INTO event (Password, Title, Description, Owner, Capacity, Price, OwnerLink, Date, Deadline, Link, Image) VALUES (?,?,?,?,?,?,?,?,?,?,?)', 
-				[[ev.pass],[ev.title],[ev.description],id,[ev.capacity],[ev.price],[ev.ownlnk],[ev.date],[ev.datereg],[ev.lnk],[ev.img]],
-				function(err, result)
+				if(ev.owner.name!=user.name)
 				{
-				if(err) {
-					console.log('query from putEvent() unsuccessful');
-					console.log(err);}
-				else{console.log('putting to db for putEvent() successful')};
-				connection.release();
-				console.log('connection released for putEvent()');
-				cb(result);
-				});
-				};
+					updatePersonName(ev.owner,function(result){console.log("users updated: "+result.changedRows);});
+				}
+				var addEve=function(id) {connection.query('INSERT INTO event (Password, Title, Description, Owner, Capacity, Price, OwnerLink, Date, Deadline, Link, Image) VALUES (?,?,?,?,?,?,?,?,?,?,?)', 
+				[[ev.pass],[ev.title],[ev.description],[id],[ev.capacity],[ev.price],[ev.ownlnk],[ev.date],[ev.datereg],[ev.lnk],[ev.img]],
+				function(err, result)
+					{
+						if(err) {
+							console.log('query from putEvent() unsuccessful');
+							console.log(err);}
+						else{console.log('putting to db for putEvent() successful')};
+							connection.release();
+							console.log('connection released for putEvent()');
+							res(result);
+						});
+					};
 				if(user.email=="")
 				{
 					
 					putPerson(ev.owner,
-					function(results)
-					{
-					addEve(results.insertId);
-					});
+					function(result)
+						{
+							addEve(result.insertId);
+						});
 				}
 				else
 				{
 					addEve(user.id);
 				}
 			});
-			
 		});
 }
 
-var getPersonByEmail = function(person, cb)
+var getPersonByEmail = function(person, res)
 {
 	pool.getConnection(function(err, connection) {
 		if(err) {console.log('cannot estabilish connection for getPersonByEmail()');} else{console.log('connected for getPersonByEmail() as id '+connection.threadId);};
@@ -88,9 +100,8 @@ var getPersonByEmail = function(person, cb)
 				}
 				connection.release();
 				console.log('connection released for getPersonByEmail()');
-				cb(user);
+				res(user);
 			});
-			
 		});
 }
 
