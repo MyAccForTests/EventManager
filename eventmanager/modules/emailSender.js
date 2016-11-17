@@ -14,8 +14,8 @@ var sendPassNotification = function(ev)
 	mailData.text='Hello.\n\nCongratulations, your event was successfully created. You can invite guests via link: \n\n '+servSettings.server.address+ev.lnk+'\n\nYou can manage your event via link: \n\n'+servSettings.server.address+ev.ownlnk+'\n\nusing password: \n\n'+ev.pass+'\n\n';
 	transporter.sendMail(mailData,function(err)
 	{
-		if(err){console.log('Error during mail sending '+err)}
-		else{console.log(email to owner successfully sended);}
+		if(err){console.log('Error during mail sending '+err);}
+		else{console.log('email to owner successfully sended');}
 	});
 }
 

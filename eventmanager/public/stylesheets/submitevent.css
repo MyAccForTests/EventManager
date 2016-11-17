@@ -1,0 +1,20 @@
+body, html, .container-fluid
+{
+     height: 100%;	 
+}
+#description
+{
+	resize: none;
+}
+#firstRow, #thirdRow
+{
+	height: 5%;
+}
+#secondRow
+{
+	height:90%;
+}
+input[readonly].rdonly {
+    background-color: #fff;
+    /* any other styles */
+}

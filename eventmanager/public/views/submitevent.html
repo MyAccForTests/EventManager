@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <title>Event Manager</title>
+	<!-- JQuery -->
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <!-- Bootstrap -->
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<!--        -->
+	<script type="text/javascript" src="../javascripts/submitevent.js"></script>
+	<script type="text/javascript" src="../javascripts/qrcode.js"></script>
+	<link type="text/css" rel="stylesheet" href="../stylesheets/submitevent.css">
+</head>
+<body>
+<div class="container-fluid">
+	<div class="row" id="firstRow"></div>
+	<div class="row" id="secondRow">
+	<div class="col-md-3"></div>
+	<div class="col-md-6">
+		<div class="page-header">
+			<h1 class="text-center">Congratulations!</h1>
+			<h2 class="text-center">You have successfully created an event.</h2>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">You can invite guests via QR-code:</h3>
+			</div>
+			<div class="panel-body">
+				<div id="qrcode" class="text-center"></div>
+			</div>
+		</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">You can invite guests via link:</h3>
+			</div>
+				<div class="panel-body">
+					<div class="input-group">
+						<input type="text" class="form-control rdonly" id="invLnk" placeholder="Invite Link" value="no_value" readonly>
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button" id="invBut">Copy Link</button>
+							<button class="btn btn-default" type="button" id="invGoBut">Use Link</button>
+						</span>
+					</div>
+				</div>
+			</div>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title">You can manage your event via link:</h3>
+			</div>
+				<div class="panel-body">
+					<div class="input-group">
+						<input type="text" class="form-control rdonly" id="ownLnk" placeholder="Owner Link" value="no_value" readonly>
+						<span class="input-group-btn">
+							<button class="btn btn-default" type="button" id="ownBut">Copy Link</button>
+							<button class="btn btn-default" type="button" id="ownGoBut">Use Link</button>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	<div class="col-md-3"></div>
+	</div>
+	<div class="row" id="thirdRow"></div>
+</div>
+</body>
+</html>

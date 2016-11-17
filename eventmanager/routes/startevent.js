@@ -28,7 +28,9 @@ routes.post('/create',upload.single('img'), function(req, res) {
 	});
 	emailSender.sendPassNotification(ev);
 	*/
-	res.send("Suceed");
+	console.log("all done!");
+
+	res.sendFile(path.resolve(__dirname + '/../public/views/submitevent.html'));
 });
 
 routes.post('/email', function(req, res) {
