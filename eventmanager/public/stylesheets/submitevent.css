@@ -2,10 +2,6 @@ body, html, .container-fluid
 {
      height: 100%;	 
 }
-#description
-{
-	resize: none;
-}
 #firstRow, #thirdRow
 {
 	height: 5%;
@@ -16,5 +12,11 @@ body, html, .container-fluid
 }
 input[readonly].rdonly {
     background-color: #fff;
-    /* any other styles */
+}
+#qrcode{
+    text-align: center !important;
+}
+
+#qrcode>img{
+    display: inline !important;
 }

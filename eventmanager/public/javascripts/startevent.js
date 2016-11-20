@@ -47,4 +47,3 @@ function checkNameInBase()
 			$("#name").val(user.name);
 		});
 }
-/*-----------------------------------------*/

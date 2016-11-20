@@ -14,27 +14,22 @@ router.post('/create',upload.single('img'), function(req, res) {
 	var person=incPostParser.parsePerson(req);
 	var ev=incPostParser.parseEvent(req);
 	var pass=generatePassword(6, true);
-	var lnk="i/"+generatePassword(11, false);
-	var ownlnk="o/"+generatePassword(11, false);
+	var lnk="i/"+generatePassword(8, false)+Date.now();
+	var ownlnk="o/"+generatePassword(8, false)+Date.now();
+	var sublnk="s/"+generatePassword(8, false)+Date.now();
 	ev.pass=pass;
 	ev.ownlnk=ownlnk;
 	ev.lnk=lnk;
+	ev.sublnk=sublnk;
 	console.log("incoming event:");
 	console.log(ev);
-	/*
 	DBConnection.putEvent(ev,function(result)
 	{
 		console.log("inserted event, id: "+result.insertId);
 	});
 	emailSender.sendPassNotification(ev);
-	*/
 	console.log("event created");
-	res.render(__dirname + '/../public/views/submitevent.ejs',
-	{
-		lnk : servSettings.server.address + ev.lnk,
-		ownlnk : servSettings.server.address + ev.ownlnk
-	});
-	console.log("submit page sended");
+	res.redirect(servSettings.server.address+ev.sublnk);
 });
 
 router.post('/email', function(req, res) {
@@ -43,7 +38,6 @@ router.post('/email', function(req, res) {
 	DBConnection.getPersonByEmail(person, 
 	function(user){
 		res.setHeader('Content-Type', 'application/json');
-		user.id = "";
 		res.send(JSON.stringify(user));
 	});
 });

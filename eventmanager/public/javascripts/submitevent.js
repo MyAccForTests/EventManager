@@ -22,10 +22,10 @@ $(window).on("load",function()
 	});
 	$("#invGoBut").click(function(){
 		//console.log($("#invLnk").val());
-		location.replace($("#invLnk").val());
+		location.href=($("#invLnk").val());
 	});
 	$("#ownGoBut").click(function(){
 		//console.log($("#ownLnk").val());
-		location.replace($("#ownLnk").val());
+		location.href=($("#ownLnk").val());
 	});
 });

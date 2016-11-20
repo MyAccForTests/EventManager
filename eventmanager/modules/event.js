@@ -1,7 +1,7 @@
 "use strict"
 class Event
 {
-	constructor(title, pass, description, owner, capacity, price, date, datereg, ownlnk, lnk, img)
+	constructor(title, pass, description, owner, capacity, price, date, datereg, ownlnk, lnk, sublnk, img)
 	{
 		this.id="";
 		this.title=title;
@@ -14,6 +14,7 @@ class Event
 		this.datereg=datereg;
 		this.ownlnk=ownlnk;
 		this.lnk=lnk;
+		this.sublnk=sublnk;
 		this.img=img;
 	}
 }

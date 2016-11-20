@@ -4,7 +4,7 @@ var app = express();
 var fs = require('fs');
 var settings = fs.readFileSync('./settings/settings.txt','utf8');
 global.servSettings = JSON.parse(settings);
-var port  = servSettings.server.port;
+var port = servSettings.server.port;
 /*-----------------------------------------*/
 var bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
@@ -23,11 +23,13 @@ var startPage = require('./routes/startpage');
 var startEvent = require('./routes/startevent');
 var invitePage = require('./routes/invitepage');
 var ownerPage = require('./routes/ownerpage');
+var submitPage = require('./routes/submitpage');
 
 app.use('/', startPage);
 app.use('/startevent', startEvent);
 app.use('/i', invitePage);
 app.use('/o', ownerPage);
+app.use('/s', submitPage);
 /*-----------------------------------------*/
 app.listen(port, function(){console.log('server started at port:'+port);});
 
