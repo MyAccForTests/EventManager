@@ -1,6 +1,6 @@
 "use strict"
 var servAdress="http://localhost:6560";
-window.addEventListener ("load", function()
+$(window).on("load", function()
 {
 	$("#buttonForm").attr("action",servAdress+"/startevent");
 });
