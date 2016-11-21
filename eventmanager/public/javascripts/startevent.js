@@ -1,5 +1,5 @@
 "use strict"
-var servAdress="http://localhost:6560/startevent";
+servAdress+="startevent";
 $(window).on("load",function()
 {
 	var now=new Date();

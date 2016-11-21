@@ -1,5 +1,4 @@
 "use strict"
-var servAdress="http://localhost:6560/startevent";
 $(window).on("load",function()
 {
 	var value=$("#invLnk").val();
@@ -21,11 +20,9 @@ $(window).on("load",function()
 		document.execCommand('copy');
 	});
 	$("#invGoBut").click(function(){
-		//console.log($("#invLnk").val());
 		location.href=($("#invLnk").val());
 	});
 	$("#ownGoBut").click(function(){
-		//console.log($("#ownLnk").val());
 		location.href=($("#ownLnk").val());
 	});
 });

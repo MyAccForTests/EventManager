@@ -4,7 +4,15 @@ var router = express.Router();
 var path = require('path');
 var generatePassword = require('password-generator');
 var multer  = require('multer');
-var upload = multer({dest: './public/userimages/', rename: function (fieldname, filename) {return Date.now()+generatePassword(4,true)+filename}})
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/userimages/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now()+generatePassword(5,false)+file.originalname.slice(file.originalname.lastIndexOf(".",file.originalname.length)))
+  }
+});
+var upload = multer({ storage: storage });
 
 router.get('/', function(req, res) {
 	res.sendFile(path.resolve(__dirname + '/../public/views/startevent.html'));
@@ -23,13 +31,16 @@ router.post('/create',upload.single('img'), function(req, res) {
 	ev.sublnk=sublnk;
 	console.log("incoming event:");
 	console.log(ev);
+	/*
 	DBConnection.putEvent(ev,function(result)
 	{
-		console.log("inserted event, id: "+result.insertId);
+		console.log("inserted event, id: "+result.insertId);							//check results, if err-notify user
+		//emailSender.sendPassNotification(ev);											//didn't work - spam protection
+		console.log("event created");
+		res.redirect(servSettings.server.address+ev.sublnk);
 	});
-	emailSender.sendPassNotification(ev);
-	console.log("event created");
-	res.redirect(servSettings.server.address+ev.sublnk);
+	*/
+	res.redirect(servSettings.server.address+ev.sublnk);								//to delete
 });
 
 router.post('/email', function(req, res) {
@@ -37,7 +48,7 @@ router.post('/email', function(req, res) {
 	console.log(person);
 	DBConnection.getPersonByEmail(person, 
 	function(user){
-		res.setHeader('Content-Type', 'application/json');
+		res.setHeader('Content-Type', 'application/json');								//check results, if err-notify user
 		res.send(JSON.stringify(user));
 	});
 });

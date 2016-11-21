@@ -1,2 +1,4 @@
-image loading problem
-submit page in first loading loaded without links
+http://localhost:6560/s/zJ2HUo3c1479730725149
+http://localhost:6560/i/82e6oUIA1479730725149
+http://localhost:6560/o/JILXcvnA1479730725149
+pass: tiwoze
