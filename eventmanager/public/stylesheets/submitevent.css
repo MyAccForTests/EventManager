@@ -1,14 +1,6 @@
 body, html, .container-fluid
 {
-     height: 100%;	 
-}
-#firstRow, #thirdRow
-{
-	height: 5%;
-}
-#secondRow
-{
-	height:90%;
+    height: 100%;	 
 }
 input[readonly].rdonly {
     background-color: #fff;

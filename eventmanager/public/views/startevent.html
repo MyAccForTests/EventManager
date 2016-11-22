@@ -19,12 +19,11 @@
 </head>
 <body>
 <div class="container-fluid">
-	<div class="row" id="firstRow"></div>
-	<div class="row" id="secondRow">
-	<div class="col-md-3"></div>
-	<div class="col-md-6">
+	<div class="row">
+	<div class="col-md-2"></div>
+	<div class="col-md-8">
 	<form method="POST" id="eventForm" enctype="multipart/form-data">
-	<div class="panel panel-default">
+	<div class="panel panel-success">
 	<div class="panel-heading">
 		<h3 class="panel-title">Event creation form:</h3>
 	</div>
@@ -42,56 +41,67 @@
 			<textarea rows="8" oninput="symbCount()" id="description" name="description" placeholder="Up to 5000 symbols, required" class="form-control" maxlength="5000" autocomplete="false" required></textarea>
 			<p id="leftSym" class="text-right text-info small"></p>
 		</div>
-		<div class="form-group">
-			<label for="email">
-				Your E-mail:
-			</label>
-			<input type="email" id="email" onblur="checkNameInBase()" name="email" placeholder="aaa@bbb.com, required" class="form-control" maxlength="50" required>
+		<div class="form-group form-inline">
+			<div class="row">
+				<div class="col-md-6">
+					<label for="email">
+						Your E-mail:
+					</label><br>
+					<input type="email" id="email" onblur="checkNameInBase()" name="email" placeholder="aaa@bbb.com, required" class="form-control" maxlength="50" required>
+				</div>
+				<div class="col-md-6">
+					<label for="name">
+						Your name:
+					</label><br>
+					<input type="text" id="name" name="name" placeholder="Name, required" class="form-control" maxlength="50" autocomplete="false" required>
+				</div>
+			</div>
 		</div>
-		<div class="form-group">
-			<label for="name">
-				Your name:
-			</label>
-			<input type="text" id="name" name="name" placeholder="Name, required" class="form-control" maxlength="50" autocomplete="false" required>
+		<div class="form-group form-inline">
+			<div class="row">
+				<div class="col-md-6">
+					<label for="date">
+						Event date:
+					</label><br>
+					<input type="datetime-local" onchange="regDateSet()" id="date" name="date" class="form-control"  min="1899-01-01T00:00:00" max="2200-13-13T23:59:59" autocomplete="false" required>
+				</div>
+				<div class="col-md-6">
+					<label for="datereg">
+						Last registration date:
+					</label><br>
+					<input type="datetime-local" id="datereg" name="datereg" class="form-control" min="1899-01-01T00:00:00" max="2200-13-13T23:59:59" autocomplete="false" required>
+				</div>
+			</div>
 		</div>
-		<div class="form-group">
-			<label for="date">
-				Event date:
-			</label>
-			<input type="datetime-local" onchange="regDateSet()" id="date" name="date" class="form-control"  min="1899-01-01T00:00:00" max="2200-13-13T23:59:59" autocomplete="false" required>
-		</div>
-		<div class="form-group">
-			<label for="datereg">
-				Last registration date:
-			</label>
-			<input type="datetime-local" id="datereg" name="datereg" class="form-control" min="1899-01-01T00:00:00" max="2200-13-13T23:59:59" autocomplete="false" required>
-		</div>
-		<div class="form-group">
-			<label for="capacity">
-				Event capacity:
-			</label>
-			<input type="number" id="capacity" name="capacity" min="0" step="1" placeholder="Max number of guests" class="form-control" min="0" autocomplete="false" max="1000000000">
-		</div>
-		<div class="form-group">
-			<label for="price">
-				Event price:
-			</label>
-			<input type="number" min="0.00" step="0.01" id="price" name="price" placeholder="0.00" class="form-control" min="0" autocomplete="false" max="1000000000">
+		<div class="form-group form-inline">
+			<div class="row">
+				<div class="col-md-6">
+					<label for="capacity">
+						Event capacity:
+					</label><br>
+					<input type="number" id="capacity" name="capacity" min="0" step="1" placeholder="Max number of guests" class="form-control" min="0" autocomplete="false" max="1000000000">
+				</div>
+				<div class="col-md-6">
+					<label for="price">
+						Event price:
+					</label><br>
+					<input type="number" min="0.00" step="0.01" id="price" name="price" placeholder="0.00" class="form-control" min="0" autocomplete="false" max="1000000000">
+				</div>
+			</div>
 		</div>
 		<div class="form-group">
 			<label for="img">
 				Image:
 			</label>
-		<input type="file" id="img" name="img" accept="image/*">
+			<input type="file" id="img" name="img" accept="image/*">
 		</div>
 		<button type="submit" class="btn btn-success btn-block">Create Event</button>
 	</form>
 	</div>
 	</div>
 	</div>
-	<div class="col-md-3"></div>
 	</div>
-	<div class="row" id="thirdRow"></div>
+	<div class="col-md-2"></div>
 </div>
 </body>
 </html>

@@ -1,16 +1,12 @@
 body, html, .container-fluid
 {
-     height: 100%;	 
+    height: 100%;	 
 }
 #description
 {
 	resize: none;
 }
-#firstRow, #thirdRow
+#email, #name, #date, #datereg, #capacity, #price
 {
-	height: 5%;
-}
-#secondRow
-{
-	height:90%;
+	width:100%;
 }

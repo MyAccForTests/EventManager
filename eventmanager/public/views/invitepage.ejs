@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <title>Event Manager</title>
+	<!-- JQuery -->
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+	<!-- Bootstrap -->
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<!--        -->
+	<script type="text/javascript" src="../javascripts/settings.js"></script>
+	<script type="text/javascript" src="../javascripts/invitepage.js"></script>
+	<link type="text/css" rel="stylesheet" href="../stylesheets/invitepage.css">
+</head>
+<body>
+<div class="container-fluid">
+	<div class="row">
+	<div class="col-md-2"></div>
+	<div class="col-md-8">
+		<div class="panel panel-success">
+			<div class="panel-heading"></div>
+			<div class="panel-body">
+			<div class="row">
+					<div class="form-group">
+						<div class="col-md-10">
+							<div class="header">
+								<h2>You have been invited to an Event!</h2>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<form method="POST" id="inviteForm" enctype="application/json">
+								<button type="submit" class="btn btn-success btn-block">Participate</button>
+							</form>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-8">
+						<div id="imageContainer">
+							<img src="<%= image %>" alt="error loading image" class="img-rounded" id="image">
+						</div>
+					</div>
+					<div class="col-md-4">
+					<dl>
+					<dt>Title:</dt>
+  					<dd><%= title %></dd>
+					<dt>Who:</dt>
+					<dd><%= ownerName %></dd>
+					<dt>When:</dt>
+  					<dd><%= dateStart %></dd>
+					<dt>Registration ends:</dt>
+  					<dd><%= dateReg %></dd>
+					<dt>Total space:</dt>
+  					<dd><%= capacity %></dd>
+					<dt>Left space:</dt>
+  					<dd><%= leftSpace %></dd>
+					<dt>Price:</dt>
+  					<dd><%= price %></dd>
+					</dl>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<dl>
+						<dt>What:</dt>
+						<dd><%= description %></dd>
+						</dl>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-2"></div>
+	</div>
+</body>
+</html>

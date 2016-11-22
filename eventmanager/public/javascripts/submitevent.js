@@ -5,8 +5,8 @@ $(window).on("load",function()
 	new QRCode(document.getElementById("qrcode"), 
 	{
 		text: value,
-		width: 128,
-		height: 128,
+		width: 157,
+		height: 157,
 		colorDark : "#000000",
 		colorLight : "#ffffff",
 		correctLevel : QRCode.CorrectLevel.H

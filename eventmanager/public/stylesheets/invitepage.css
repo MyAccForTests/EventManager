@@ -1,4 +1,8 @@
-body, html, .container-fluid{
+body, html, .container-fluid
+{
      height: 100%; 
 }
-
+#image
+{
+	width: 100%;
+}
