@@ -25,50 +25,46 @@
 		<div class="panel panel-success">
 			<div class="panel-heading"></div>
 			<div class="panel-body">
-			<div class="row">
-					<div class="form-group">
-						<div class="col-md-10">
-							<div class="header">
-								<h2>You have been invited to an Event!</h2>
-							</div>
+				<div class="row">
+					<div class="col-md-10">
+						<div class="header">
+							<h2><%= title %></h2>
 						</div>
-						<div class="col-md-2">
-							<form method="POST" id="inviteForm" enctype="application/json">
-								<button type="submit" class="btn btn-success btn-block">Participate</button>
-							</form>
-						</div>
+					</div>
+					<div class="col-md-2">
+						<form method="POST" id="inviteForm" enctype="application/json">
+							<button type="submit" class="btn btn-success btn-block">Participate</button>
+						</form>
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-8">
+					<div class="col-md-6">
 						<div id="imageContainer">
-							<img src="<%= image %>" alt="error loading image" class="img-rounded" id="image">
+							<img src="<%= image %>" alt="error loading image" class="img-thumbnail" id="image">
 						</div>
 					</div>
-					<div class="col-md-4">
-					<dl>
-					<dt>Title:</dt>
-  					<dd><%= title %></dd>
-					<dt>Who:</dt>
-					<dd><%= ownerName %></dd>
-					<dt>When:</dt>
-  					<dd><%= dateStart %></dd>
-					<dt>Registration ends:</dt>
-  					<dd><%= dateReg %></dd>
-					<dt>Total space:</dt>
-  					<dd><%= capacity %></dd>
-					<dt>Left space:</dt>
-  					<dd><%= leftSpace %></dd>
-					<dt>Price:</dt>
-  					<dd><%= price %></dd>
-					</dl>
+					<div class="col-md-6">
+						<dl>
+							<dt>Who:</dt>
+							<dd><%= ownerName %></dd>
+							<dt>When:</dt>
+							<dd><%= dateStart %></dd>
+							<dt>Registration ends:</dt>
+							<dd><%= dateReg %></dd>
+							<dt><%= capacityC %></dt>
+							<dd><%= capacity %></dd>
+							<dt><%= leftSpaceL %></dt>
+							<dd><%= leftSpace %></dd>
+							<dt><%= priceP %></dt>
+							<dd><%= price %></dd>
+						</dl>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-md-12">
 						<dl>
-						<dt>What:</dt>
-						<dd><%= description %></dd>
+							<dt>What:</dt>
+							<dd><%= description %></dd>
 						</dl>
 					</div>
 				</div>

@@ -7,16 +7,42 @@ router.get('/*', function(req, res) {
 	var lnk = req.originalUrl;
 	DBConnection.getEventByLink(lnk, function(ev)								//check results, if err-notify user, if no link-send error page
 	{
-		console.log("../"+ev.img.replace('\\public\\','/');
+		var capC="Total space:";
+		var leftL="Left space:";
+		var leftS="0";
+		var prP="Price:";
+		if(ev.img=="")
+		{
+			ev.img= '../images/eventInviteImagePlaceholder.jpg';
+		}
+		else 
+		{
+			ev.img="../"+ev.img.replace('\public','/').replace("\\",'/')
+		}
+		if(ev.capacity==-1)
+		{
+			ev.capacity="";
+			capC="";
+			leftL="";
+			leftS="";
+		}
+		if(ev.price==-1)
+		{
+			ev.price="";
+			prP="";
+		}
 		res.render(__dirname + '/../public/views/invitepage.ejs',
 		{
-			image		:	"../"+ev.img.replace('\\public\\','/'),
+			image		:	ev.img,
 			title		:	ev.title,
 			ownerName	:	ev.owner.name,
-			dateStart	:	ev.date,
-			dateReg		:	ev.datereg,
+			dateStart	:	ev.date.toLocaleString(),
+			dateReg		:	ev.datereg.toLocaleString(),
+			capacityC	:	capC,
 			capacity	:	ev.capacity,
-			leftSpace	:	"0",												//count
+			leftSpaceL	:	leftL,
+			leftSpace	:	leftS,												//count
+			priceP		:	prP,
 			price		:	ev.price,
 			description	:	ev.description
 		});
