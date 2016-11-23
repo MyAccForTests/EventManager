@@ -50,4 +50,18 @@ router.get('/*', function(req, res) {
 	});
 });
 
+router.get('/participate', function(req, res) {
+	
+});
+
+router.post('/email', function(req, res) {
+	var person=req.body;
+	console.log(person);
+	DBConnection.getPersonByEmail(person, 
+	function(user){
+		res.setHeader('Content-Type', 'application/json');								//check results, if err-notify user
+		res.send(JSON.stringify(user));
+	});
+});
+
 module.exports = router;

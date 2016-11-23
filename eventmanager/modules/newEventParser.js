@@ -1,12 +1,12 @@
 "use strict"
 var express = require('express');
 
-var parsePerson = function(req)
+var parseNewEventPerson = function(req)
 {
 	return new Person(req.body.name, req.body.email);
 }
 
-var parseEvent = function(req)
+var parseNewEventEvent = function(req)
 {
 	var imgLink="";
 	var price=req.body.price;
@@ -17,5 +17,5 @@ var parseEvent = function(req)
 	return new Event(req.body.title, "", req.body.description, new Person(req.body.name, req.body.email), capacity, price, new Date(req.body.date).toISOString().slice(0, 19).replace('T', ' '), new Date(req.body.datereg).toISOString().slice(0, 19).replace('T', ' '), "", "", "", imgLink)
 }
 
-module.exports.parsePerson = parsePerson;
-module.exports.parseEvent = parseEvent;
+module.exports.parseNewEventPerson = parseNewEventPerson;
+module.exports.parseNewEventEvent = parseNewEventEvent;

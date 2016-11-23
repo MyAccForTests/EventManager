@@ -19,8 +19,8 @@ router.get('/', function(req, res) {
 });
 
 router.post('/create',upload.single('img'), function(req, res) {
-	var person=incPostParser.parsePerson(req);
-	var ev=incPostParser.parseEvent(req);
+	var person=newEventParser.parseNewEventPerson(req);
+	var ev=newEventParser.parseNewEventEvent(req);
 	var pass=generatePassword(6, true);
 	var lnk="i/"+generatePassword(8, false)+Date.now();
 	var ownlnk="o/"+generatePassword(8, false)+Date.now();

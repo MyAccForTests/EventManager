@@ -113,9 +113,9 @@ var putEvent = function(ev,res)
 				{
 					putPerson(ev.owner,
 					function(result)
-						{
-							addEve(result.insertId);
-						});
+					{
+						addEve(result.insertId);
+					});
 				}
 				else
 				{
