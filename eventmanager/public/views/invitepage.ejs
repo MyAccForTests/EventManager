@@ -15,6 +15,7 @@
 	<!--        -->
 	<script type="text/javascript" src="../javascripts/settings.js"></script>
 	<script type="text/javascript" src="../javascripts/invitepage.js"></script>
+	<script type="text/javascript" src="../javascripts/js.cookie.js"></script>
 	<link type="text/css" rel="stylesheet" href="../stylesheets/invitepage.css">
 </head>
 <body>
@@ -58,9 +59,9 @@
 				<br>
 				<div class="row">
 				<div class="col-md-3">
-					<button id="participate" class="btn btn-success btn-block">Participate</button>
+					<button id="participate" class="btn btn-primary btn-block">Participate</button>
 					<form id="participateForm" onsubmit="return false">
-						<button type="submit" id="submit" class="btn btn-success btn-block">Submit</button>
+						<button type="submit" id="submit" class="btn btn-primary btn-block">Submit</button>
 				</div>
 				<div class="col-md-3">
 						<input type="email" id="email" name="email" class="form-control" placeholder="Enter your email" maxlength="50" required>
@@ -68,6 +69,15 @@
 				<div class="col-md-3">
 						<input type="text" id="name" name="name" placeholder="Enter your name" class="form-control" maxlength="50" autocomplete="false" required>
 					</form>
+				</div>
+				</div>
+				<div class="row" id="err"><br>
+				<div class="col-md-12">
+					<div class="alert alert-danger" role="alert">
+						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+						<span class="sr-only">Error:</span>
+						<span id="errMessage"></span>
+					</div>
 				</div>
 				</div>
 				<br>
@@ -84,5 +94,8 @@
 	</div>
 	<div class="col-md-2"></div>
 	</div>
+	<script>
+		var evID=<%= evID %>;
+	</script>
 </body>
 </html>

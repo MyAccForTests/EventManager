@@ -2,13 +2,46 @@
 var express = require('express');
 var mysql = require('mysql');
 var pool = mysql.createPool(servSettings.database);
-  
+ 
+var subscribe = function(personID, evID, res)
+{
+	pool.getConnection(function(err, connection) {
+		if(err)
+		{
+			console.log('cannot estabilish connection for subscribe()');
+		} 
+		else
+		{
+			console.log('connected for subscribe() as id '+connection.threadId);
+			connection.query('INSERT INTO eventperson (Person, Event) VALUES (?,?)', [[personID],[evID]],
+			function(err, result)
+			{
+				if(err) 
+				{
+					console.log('query from subscribe() unsuccessful');
+					connection.release();
+					console.log('connection released after bad query in subscribe()');
+					res(err);
+				}
+				else
+				{
+					console.log('putting to db for subscribe() successful')
+					connection.release();
+					console.log('connection released for subscribe()');
+					res(result);
+				}
+			});
+		};
+	});
+}
+ 
 var putPerson = function(person, res)
 {
 	pool.getConnection(function(err, connection) {
 		if(err)
 		{
 			console.log('cannot estabilish connection for putPerson()');
+			res(err);
 		} 
 		else
 		{
@@ -286,3 +319,4 @@ module.exports.putEvent = putEvent;
 module.exports.getPersonByEmail = getPersonByEmail;
 module.exports.getEventByLink = getEventByLink;
 module.exports.getPersonById = getPersonById;
+module.exports.subscribe = subscribe;

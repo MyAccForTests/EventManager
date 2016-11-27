@@ -41,23 +41,65 @@ router.get('/*', function(req, res) {
 			capacityC	:	capC,
 			capacity	:	ev.capacity,
 			leftSpaceL	:	leftL,
-			leftSpace	:	leftS,												//count
+			leftSpace	:	leftS,														//count
 			priceP		:	prP,
 			price		:	ev.price,
-			description	:	ev.description
+			description	:	ev.description,
+			evID		:	ev.id
 		});
 		console.log("invite page sended");
 	});
 });
 
-router.get('/participate', function(req, res) {
-	
+router.post('/sub', function(req, res) {
+	var userID;
+	var evID=req.body.evID;
+	if(req.body.userID===undefined)
+		{
+			DBConnection.putPerson(person, function(result){
+			userID=result.insertId;
+			subsc(userID, evID, res);
+		});
+	}
+	else
+	{
+		userID=req.body.userID;
+		subsc(userID, evID, res);
+	}	
 });
-
+var subsc = function(userID, evID, res)
+{
+	DBConnection.subscribe(userID, evID, function(result)								//check results, if err-notify user, if no link-send error page
+	{
+		res.writeHead(200, {'Content-Type': 'text/event-stream'});
+			var sub=
+			{
+				userID	:	userID,
+				evID	:	evID
+			}
+		res.end(JSON.stringify(sub));
+																						//send email
+	});
+}
+/*
+router.post('/unsub', function(req, res) {
+	console.log(req.body);
+	res.writeHead(200, {'Content-Type': 'text/event-stream'});
+	res.end("success");																	//send success or fail
+});
+*/
 router.post('/email', function(req, res) {
 	var person=req.body;
-	console.log(person);
 	DBConnection.getPersonByEmail(person, 
+	function(user){
+		res.setHeader('Content-Type', 'application/json');								//check results, if err-notify user
+		res.send(JSON.stringify(user));
+	});
+});
+
+router.post('/user', function(req, res) {
+	var id=req.body.id;
+	DBConnection.getPersonById(id, 
 	function(user){
 		res.setHeader('Content-Type', 'application/json');								//check results, if err-notify user
 		res.send(JSON.stringify(user));
