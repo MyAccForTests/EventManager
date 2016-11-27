@@ -1,18 +1,10 @@
 "use strict"
 servAdress+="i";
 var userID;
-var currLoc;
-var ck = 
-{
-	userID	:	"",
-	evID	:	""
-}
 
 $(window).on("load", function()
 {
 	var ck=Cookies.getJSON('ck');
-	console.log(ck);
-	currLoc = window.location.pathname.slice(1,window.location.pathname.length);
 	if(ck===undefined||ck.userID=="")
 	{
 		$("#participate").on("click",participate);
@@ -23,6 +15,7 @@ $(window).on("load", function()
 	}
 	else
 	{
+		userID=ck.userID;
 		$("#err").hide();
 		$("#participate").hide();
 		$("#name").show();
@@ -36,7 +29,7 @@ $(window).on("load", function()
 			method : "POST",
 			data :
 			{
-				id	:	ck.userID
+				id	:	userID
 			}
 		}
 		var post = $.ajax(data);
@@ -66,7 +59,7 @@ var participate=function()
 }
 var check=function()
 {
-	$("#err").hide();
+	$("#name").prop("readonly",false);
 	var email=$("#email").val();
 	if(email!="")
 	{
@@ -94,7 +87,7 @@ var check=function()
 			$("#submit").prop("innerHTML","Subscribe!")
 			$("#submit").unbind("click",check);
 			$("#submit").on("click",sub);
-			
+			$("#err").hide();
 		});
 		post.fail(function(user)
 		{
@@ -106,32 +99,21 @@ var check=function()
 
 var sub=function()
 {
-	$("#err").hide();
 	var name=$("#name").val();
 	var email=$("#email").val();
 	if(name!="")
 	{
-		var dt;
-		if(userID===undefined)
-		{
-			dt = 	{
-						name	:	name,
-						email 	: 	email,
-						evID	:	evID
-					}
-		}
-		else
-		{
-			dt = 	{
-						userID 	:	userID,
-						evID	:	evID
-					}
-		}
 		var data = 
 		{
 			url : servAdress+"/sub",
 			method : "POST",
-			data :	dt
+			data :	
+			{
+				userID 	:	userID,
+				evID	:	evID,
+				name	:	name,
+				email 	: 	email
+			}
 		}
 		var post = $.ajax(data);
 		post.done(function(resp)
@@ -147,8 +129,8 @@ var sub=function()
 							userID	:	userID,
 							evID	:	evID
 						}
-				Cookies.set('ck', ck, { path: currLoc });
-				console.log(Cookies.getJSON('ck'));
+				Cookies.set('ck', ck, { path: window.location.pathname, expires: 356 });
+				$("#err").hide();
 		});
 		post.fail(function(user)
 		{
@@ -159,11 +141,9 @@ var sub=function()
 }
 var unsub=function()
 {
-	Cookies.remove('ck', { path: currLoc });
-	/*
 	var data = 
 		{
-			url : servAdress+"/sub",
+			url : servAdress+"/unsub",
 			method : "POST",
 			data :	{
 						userID : userID,
@@ -173,11 +153,19 @@ var unsub=function()
 		var post = $.ajax(data);
 		post.done(function(resp)
 			{
-				console.log(resp);
+				Cookies.remove('ck', { path: window.location.pathname });
+				$("#submit").unbind("click",unsub);
+				$("#participate").on("click",participate);
+				$("#participate").show();
+				$("#submit").hide();
+				$("#email").hide();
+				$("#name").hide();
+				$("#err").hide();
+				$("#email").prop("readonly",false);
 			});
 		post.fail(function(resp)
 			{
-				console.log(resp);
+				$("#errMessage").prop("innerHTML","Error during unsubscribing, try again later");
+				$("#err").show();
 			});
-	*/
 }

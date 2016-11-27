@@ -33,31 +33,6 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-9">
-						<div id="imageContainer">
-							<img src="<%= image %>" alt="error loading image" class="img-thumbnail" id="image">
-						</div>
-					</div>
-					<div class="col-md-3">
-						<br>
-						<dl>
-							<dt>Who:</dt>
-							<dd><%= ownerName %></dd>
-							<dt>When:</dt>
-							<dd><%= dateStart %></dd>
-							<dt>Registration ends:</dt>
-							<dd><%= dateReg %></dd>
-							<dt><%= capacityC %></dt>
-							<dd><%= capacity %></dd>
-							<dt><%= leftSpaceL %></dt>
-							<dd><%= leftSpace %></dd>
-							<dt><%= priceP %></dt>
-							<dd><%= price %></dd>
-						</dl>
-					</div>
-				</div>
-				<br>
-				<div class="row">
 				<div class="col-md-3">
 					<button id="participate" class="btn btn-primary btn-block">Participate</button>
 					<form id="participateForm" onsubmit="return false">
@@ -79,6 +54,30 @@
 						<span id="errMessage"></span>
 					</div>
 				</div>
+				</div>
+				<br>
+				<div class="row">
+					<div class="col-md-9">
+						<div id="imageContainer">
+							<img src="<%= image %>" alt="error loading image" class="img-thumbnail" id="image">
+						</div>
+					</div>
+					<div class="col-md-3">
+						<dl>
+							<dt>Who:</dt>
+							<dd><%= ownerName %></dd>
+							<dt>When:</dt>
+							<dd><%= dateStart %></dd>
+							<dt>Registration ends:</dt>
+							<dd><%= dateReg %></dd>
+							<dt><%= capacityC %></dt>
+							<dd><%= capacity %></dd>
+							<dt><%= leftSpaceL %></dt>
+							<dd><%= leftSpace %></dd>
+							<dt><%= priceP %></dt>
+							<dd><%= price %></dd>
+						</dl>
+					</div>
 				</div>
 				<br>
 				<div class="row">

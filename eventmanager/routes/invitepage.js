@@ -54,9 +54,10 @@ router.get('/*', function(req, res) {
 router.post('/sub', function(req, res) {
 	var userID;
 	var evID=req.body.evID;
-	if(req.body.userID===undefined)
-		{
-			DBConnection.putPerson(person, function(result){
+	var person=new Person(req.body.name,req.body.email);
+	if(req.body.userID===undefined||req.body.userID=="")
+	{
+		DBConnection.putPerson(person, function(result){
 			userID=result.insertId;
 			subsc(userID, evID, res);
 		});
@@ -64,7 +65,18 @@ router.post('/sub', function(req, res) {
 	else
 	{
 		userID=req.body.userID;
-		subsc(userID, evID, res);
+		DBConnection.getPersonById(userID,function(user){
+			if(user.name!=req.body.name)
+			{;
+				DBConnection.updatePersonName(person,function(result){
+					subsc(userID, evID, res);
+				});
+			}
+			else
+			{
+				subsc(userID, evID, res);	
+			}					
+		});
 	}	
 });
 var subsc = function(userID, evID, res)
@@ -78,16 +90,21 @@ var subsc = function(userID, evID, res)
 				evID	:	evID
 			}
 		res.end(JSON.stringify(sub));
-																						//send email
+		//emailSender.sendPassNotification(ev);											//send email
 	});
 }
-/*
+
 router.post('/unsub', function(req, res) {
-	console.log(req.body);
-	res.writeHead(200, {'Content-Type': 'text/event-stream'});
-	res.end("success");																	//send success or fail
+	var userID=req.body.userID;
+	var evID=req.body.evID;
+	DBConnection.unsubscribe(userID, evID, function(result)								//check results, if err-notify user, if no link-send error page
+	{
+		res.writeHead(200, {'Content-Type': 'text/event-stream'});
+		res.end();																		
+		//emailSender.sendPassNotification(ev);											//send email
+	});
 });
-*/
+
 router.post('/email', function(req, res) {
 	var person=req.body;
 	DBConnection.getPersonByEmail(person, 

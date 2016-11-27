@@ -3,6 +3,71 @@ var express = require('express');
 var mysql = require('mysql');
 var pool = mysql.createPool(servSettings.database);
  
+var getPersonsIDByEventId = function(evID, res)
+{
+	pool.getConnection(function(err, connection) {
+		if(err) 
+		{
+			console.log('cannot estabilish connection for getPersonsIDByEventId()');
+			res(err);
+		} 
+		else
+		{
+			console.log('connected for getPersonsIDByEventId() as id '+connection.threadId);
+			connection.query('SELECT Person FROM eventperson WHERE Event=?', [evID],
+			function(err, results, fields)
+			{
+				if(err) 
+				{
+					console.log('query from getPersonsIDByEventId() unsuccessful');
+					connection.release();
+					console.log('connection released after bad query in getPersonsIDByEventId()');
+					res(err);
+				}
+				else
+				{
+					console.log('receivied for getPersonsIDByEventId() from base: '+results.length+' results')
+					connection.release();
+					console.log('connection released for getPersonsIDByEventId()');
+					res(results);
+				};
+			});
+		};
+	});
+}
+ 
+var unsubscribe = function(personID, evID, res)
+{
+	pool.getConnection(function(err, connection) {
+		if(err)
+		{
+			console.log('cannot estabilish connection for unsubscribe()');
+		} 
+		else
+		{
+			console.log('connected for unsubscribe() as id '+connection.threadId);
+			connection.query('DELETE FROM eventperson WHERE Person=? AND Event=?', [[personID],[evID]],
+			function(err, result)
+			{
+				if(err) 
+				{
+					console.log('query from unsubscribe() unsuccessful');
+					connection.release();
+					console.log('connection released after bad query in unsubscribe()');
+					res(err);
+				}
+				else
+				{
+					console.log('putting to db for unsubscribe() successful')
+					connection.release();
+					console.log('connection released for unsubscribe()');
+					res(result);
+				}
+			});
+		};
+	});
+}
+
 var subscribe = function(personID, evID, res)
 {
 	pool.getConnection(function(err, connection) {
@@ -316,7 +381,10 @@ var getPersonById = function(id, res)
 
 module.exports.putPerson = putPerson;
 module.exports.putEvent = putEvent;
+module.exports.getPersonsIDByEventId = getPersonsIDByEventId;
+module.exports.updatePersonName = updatePersonName;
 module.exports.getPersonByEmail = getPersonByEmail;
 module.exports.getEventByLink = getEventByLink;
 module.exports.getPersonById = getPersonById;
 module.exports.subscribe = subscribe;
+module.exports.unsubscribe = unsubscribe;
