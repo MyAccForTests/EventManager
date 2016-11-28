@@ -14,7 +14,6 @@ app.set('view engine', 'ejs');
 global.Person = require('./modules/person');
 global.Event = require('./modules/event');
 global.DBConnection = require('./modules/mysqlConnection');
-global.newEventParser = require('./modules/newEventParser');
 global.emailSender = require('./modules/emailSender');
 /*-----------------------------------------*/
 app.use(express.static('public'));

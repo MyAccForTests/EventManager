@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var path = require('path');
 var generatePassword = require('password-generator');
+var newEventParser = require('./../modules/newEventParser');
 var multer  = require('multer');
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -31,16 +32,13 @@ router.post('/create',upload.single('img'), function(req, res) {
 	ev.sublnk=sublnk;
 	console.log("incoming event:");
 	console.log(ev);
-	/*
 	DBConnection.putEvent(ev,function(result)
 	{
 		console.log("inserted event, id: "+result.insertId);							//check results, if err-notify user
-		//emailSender.sendPassNotification(ev);											//didn't work - spam protection
+		//emailSender.sendPassNotification(ev);											//send email success
 		console.log("event created");
 		res.redirect(servSettings.server.address+ev.sublnk);
 	});
-	*/
-	res.redirect(servSettings.server.address+ev.sublnk);								//to delete
 });
 
 router.post('/email', function(req, res) {

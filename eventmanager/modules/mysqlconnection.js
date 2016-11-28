@@ -2,7 +2,41 @@
 var express = require('express');
 var mysql = require('mysql');
 var pool = mysql.createPool(servSettings.database);
- 
+
+var countFreeSpace = function(evID, res)
+{
+	pool.getConnection(function(err, connection) {
+		if(err) 
+		{
+			console.log('cannot estabilish connection for countFreeSpace()');
+			res(err);
+		} 
+		else
+		{
+			console.log('connected for countFreeSpace() as id '+connection.threadId);
+			connection.query('SELECT ev.evCapacity-IFNULL(ep.reservedSpace,0) as freeSpace FROM (SELECT id as evID, Capacity as evCapacity FROM event WHERE Capacity IS NOT NULL) as ev LEFT OUTER JOIN (SELECT Event as epEvent, COUNT(Event) as reservedSpace FROM eventperson GROUP BY Event) as ep ON ev.evID = ep.epEvent WHERE ev.evID=?', [evID],
+			function(err, results, fields)
+			{
+				if(err) 
+				{
+					console.log('query from countFreeSpace() unsuccessful');
+					connection.release();
+					console.log('connection released after bad query in countFreeSpace()');
+					res(err);
+				}
+				else
+				{
+					console.log('receivied for countFreeSpace() from base: '+results.length+' results')
+					connection.release();
+					console.log('connection released for countFreeSpace()');
+					var freeSpace = results[0].freeSpace;
+					res(freeSpace);
+				};
+			});
+		};
+	});
+}
+
 var getPersonsIDByEventId = function(evID, res)
 {
 	pool.getConnection(function(err, connection) {
@@ -379,6 +413,7 @@ var getPersonById = function(id, res)
 	});
 }
 
+module.exports.countFreeSpace = countFreeSpace;
 module.exports.putPerson = putPerson;
 module.exports.putEvent = putEvent;
 module.exports.getPersonsIDByEventId = getPersonsIDByEventId;

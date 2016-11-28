@@ -3,13 +3,14 @@ servAdress+="i";
 var userID;
 
 $(window).on("load", function()
-{		
+{	
+	setFreeSpace();
+	$("#err").hide();
 	var ck=Cookies.getJSON('ck');
 	if(ck===undefined||ck.userID=="")
 	{	
 		$("#email").hide();
 		$("#name").hide();
-		$("#err").hide();
 		$("#submit").on("click",participate);
 		$("#submit").prop("innerHTML","Participate");
 		
@@ -48,7 +49,7 @@ $(window).on("load", function()
 });
 
 var participate=function()
-{
+{	
 	$("#email").show();
 	$("#submit").prop("innerHTML","Next");
 	$("#submit").on("click",check);
@@ -116,19 +117,28 @@ var sub=function()
 		var post = $.ajax(data);
 		post.done(function(resp)
 		{
-				$("#name").prop("readonly","true");
-				$("#submit").unbind("click",sub);
-				$("#submit").prop("innerHTML","Unsubscribe!")
-				$("#submit").on("click",unsub);
-				userID=(JSON.parse(resp)).userID;
-				evID=(JSON.parse(resp)).evID;
-				var ck = 
+				if(resp=="no_space")
+				{
+					$("#errMessage").prop("innerHTML","There is no free space, sorry.");
+					$("#err").show();
+				}
+				else
+				{
+					$("#name").prop("readonly","true");
+					$("#submit").unbind("click",sub);
+					$("#submit").prop("innerHTML","Unsubscribe!")
+					$("#submit").on("click",unsub);
+					userID=(JSON.parse(resp)).userID;
+					evID=(JSON.parse(resp)).evID;
+					var ck = 
 						{
 							userID	:	userID,
 							evID	:	evID
 						}
-				Cookies.set('ck', ck, { path: window.location.pathname, expires: 356 });
-				$("#err").hide();
+					Cookies.set('ck', ck, { path: window.location.pathname, expires: 356 });
+					$("#err").hide();
+				}
+				setFreeSpace();
 		});
 		post.fail(function(user)
 		{
@@ -148,21 +158,42 @@ var unsub=function()
 						evID : evID
 					}
 		}
-		var post = $.ajax(data);
-		post.done(function(resp)
+	var post = $.ajax(data);
+	post.done(function(resp)
+		{
+			Cookies.remove('ck', { path: window.location.pathname });
+			$("#submit").unbind("click",unsub);
+			$("#submit").on("click",participate);
+			$("#submit").prop("innerHTML","Participate");
+			$("#email").hide();
+			$("#name").hide();
+			$("#err").hide();
+			$("#email").prop("readonly",false);
+			setFreeSpace();
+		});
+	post.fail(function(resp)
+		{
+			$("#errMessage").prop("innerHTML","Error during unsubscribing, try again later");
+			$("#err").show();
+		});
+}
+
+var setFreeSpace = function(leftSpace)
+{
+	var data = 
+		{
+			url : servAdress+"/getfreespace",
+			method : "POST",
+			data :	{
+						evID : evID
+					}
+		}
+	var post = $.ajax(data);
+	post.done(function(resp)
+		{
+			if(resp>=0)
 			{
-				Cookies.remove('ck', { path: window.location.pathname });
-				$("#submit").unbind("click",unsub);
-				$("#submit").on("click",participate);
-				$("#submit").prop("innerHTML","Participate");
-				$("#email").hide();
-				$("#name").hide();
-				$("#err").hide();
-				$("#email").prop("readonly",false);
-			});
-		post.fail(function(resp)
-			{
-				$("#errMessage").prop("innerHTML","Error during unsubscribing, try again later");
-				$("#err").show();
-			});
+				$("#leftSpace").prop("innerHTML",resp);
+			}
+		});
 }

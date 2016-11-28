@@ -19,14 +19,14 @@ router.get('/*', function(req, res) {
 		{
 			ev.img="../"+ev.img.replace('\public','/').replace("\\",'/')
 		}
-		if(ev.capacity==-1)
+		if(ev.capacity==null)
 		{
 			ev.capacity="";
 			capC="";
 			leftL="";
 			leftS="";
 		}
-		if(ev.price==-1)
+		if(ev.price==null)
 		{
 			ev.price="";
 			prP="";
@@ -48,6 +48,13 @@ router.get('/*', function(req, res) {
 			evID		:	ev.id
 		});
 		console.log("invite page sended");
+	});
+});
+
+router.post('/getfreespace', function(req, res) {
+	DBConnection.countFreeSpace(req.body.evID, function(result){
+		res.writeHead(200, {'Content-Type': 'text/event-stream'});
+		res.end(JSON.stringify(result));
 	});
 });
 
@@ -78,19 +85,31 @@ router.post('/sub', function(req, res) {
 		});
 	}	
 });
+
 var subsc = function(userID, evID, res)
 {
-	DBConnection.subscribe(userID, evID, function(result)								//check results, if err-notify user, if no link-send error page
-	{
-		res.writeHead(200, {'Content-Type': 'text/event-stream'});
-			var sub=
+	DBConnection.countFreeSpace(evID, function(result){
+		if(result>0)
+		{
+			DBConnection.subscribe(userID, evID, function(result2)								//check results, if err-notify user, if no link-send error page
 			{
-				userID	:	userID,
-				evID	:	evID
-			}
-		res.end(JSON.stringify(sub));
-		//emailSender.sendPassNotification(ev);											//send email
+				res.writeHead(200, {'Content-Type': 'text/event-stream'});
+				var sub=
+				{
+					userID		:	userID,
+					evID		:	evID,
+				}
+				res.end(JSON.stringify(sub));
+				//emailSender.sendPassNotification(ev);											//send email
+			});
+		}
+		else
+		{
+			res.writeHead(200, {'Content-Type': 'text/event-stream'});
+			res.end("no_space");
+		}
 	});
+	
 }
 
 router.post('/unsub', function(req, res) {

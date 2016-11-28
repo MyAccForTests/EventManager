@@ -7,3 +7,6 @@ http://localhost:6560/s/NYNtbjll1479836609898
 http://localhost:6560/i/4bmtSHuY1479836609897
 http://localhost:6560/o/vB3eNsa81479836609898
 pukaku
+
+todo
+//coockie restore
