@@ -3,24 +3,23 @@ servAdress+="i";
 var userID;
 
 $(window).on("load", function()
-{
+{		
 	var ck=Cookies.getJSON('ck');
 	if(ck===undefined||ck.userID=="")
-	{
-		$("#participate").on("click",participate);
-		$("#submit").hide();
+	{	
 		$("#email").hide();
 		$("#name").hide();
 		$("#err").hide();
+		$("#submit").on("click",participate);
+		$("#submit").prop("innerHTML","Participate");
+		
 	}
 	else
 	{
 		userID=ck.userID;
 		$("#err").hide();
-		$("#participate").hide();
 		$("#name").show();
 		$("#email").show();
-		$("#submit").show();
 		$("#name").prop("readonly","true");
 		$("#email").prop("readonly","true");
 		var data = 
@@ -50,12 +49,10 @@ $(window).on("load", function()
 
 var participate=function()
 {
-	$("#participate").hide();
-	$("#submit").show();
 	$("#email").show();
 	$("#submit").prop("innerHTML","Next");
 	$("#submit").on("click",check);
-	$("#participate").unbind("click",participate);
+	$("#submit").unbind("click",participate);
 }
 var check=function()
 {
@@ -78,6 +75,7 @@ var check=function()
 		{
 			var name=user.name;
 			$("#name").show();
+			$("#name").val("");
 			if(name!="")
 			{
 				$("#name").val(name);
@@ -155,9 +153,8 @@ var unsub=function()
 			{
 				Cookies.remove('ck', { path: window.location.pathname });
 				$("#submit").unbind("click",unsub);
-				$("#participate").on("click",participate);
-				$("#participate").show();
-				$("#submit").hide();
+				$("#submit").on("click",participate);
+				$("#submit").prop("innerHTML","Participate");
 				$("#email").hide();
 				$("#name").hide();
 				$("#err").hide();

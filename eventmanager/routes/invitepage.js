@@ -52,10 +52,10 @@ router.get('/*', function(req, res) {
 });
 
 router.post('/sub', function(req, res) {
-	var userID;
+	var userID=req.body.userID;
 	var evID=req.body.evID;
 	var person=new Person(req.body.name,req.body.email);
-	if(req.body.userID===undefined||req.body.userID=="")
+	if(userID===undefined||userID=="")
 	{
 		DBConnection.putPerson(person, function(result){
 			userID=result.insertId;
@@ -64,7 +64,6 @@ router.post('/sub', function(req, res) {
 	}
 	else
 	{
-		userID=req.body.userID;
 		DBConnection.getPersonById(userID,function(user){
 			if(user.name!=req.body.name)
 			{;
