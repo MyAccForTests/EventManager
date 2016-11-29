@@ -216,6 +216,7 @@ var unsub=function()
 			$("#err").hide();
 			$("#email").prop("readonly",false);
 			setFreeSpace();
+			userID="";
 		});
 	post.fail(function(resp)
 		{
