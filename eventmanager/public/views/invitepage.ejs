@@ -23,16 +23,9 @@
 	<div class="col-md-8">
 		<div class="panel panel-primary">
 		<div class="panel-heading">
-			<h3 class="panel-title">You have benn invited:</h3>
+			<h3 class="panel-title">You have been invited:</h3>
 		</div>
 			<div class="panel-body">
-				<div class="row">
-					<div class="col-md-12">
-						<div class="header">
-							<h2><%= title %></h2>
-						</div>
-					</div>
-				</div>
 				<div class="row">
 				<div class="col-md-3">
 					<form id="participateForm" onsubmit="return false">
@@ -47,36 +40,52 @@
 				</div>
 				</div>
 				<div class="row" id="err"><br>
-				<div class="col-md-12">
-					<div class="alert alert-danger" role="alert">
-						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-						<span class="sr-only">Error:</span>
-						<span id="errMessage"></span>
+					<div class="col-md-12">
+						<div class="alert alert-danger" role="alert">
+							<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+							<span class="sr-only">Error:</span>
+							<span id="errMessage"></span>
+						</div>
 					</div>
-				</div>
 				</div>
 				<br>
 				<div class="row">
-					<div class="col-md-9">
+					<div class="col-md-4">
 						<div id="imageContainer">
-							<img src="<%= image %>" alt="error loading image" class="img" id="image">
+							<img src="<%= image %>" alt="error loading image" class="img img-responsive" id="image">
 						</div>
 					</div>
-					<div class="col-md-3">
-						<dl>
-							<dt>Who:</dt>
-							<dd><%= ownerName %></dd>
-							<dt>When:</dt>
-							<dd><%= dateStart %></dd>
-							<dt>Registration ends:</dt>
-							<dd id="dateReg"><%= dateReg %></dd>
-							<dt><%= capacityC %></dt>
-							<dd><%= capacity %></dd>
-							<dt><%= leftSpaceL %></dt>
-							<dd id="leftSpace"><%= leftSpace %></dd>
-							<dt><%= priceP %></dt>
-							<dd><%= price %></dd>
-						</dl>
+					<div class="col-md-8">
+						<h2 id="title"><%= title %></h2>
+						<div class="row">
+							<div class="col-md-4">
+							<dl>
+								<dt>When:</dt>
+								<dd><%= dateStart %></dd>
+								<br>
+								<dt>Registration ends:</dt>
+								<dd id="dateReg"><%= dateReg %></dd>
+							</dl>
+							</div>
+							<div class="col-md-4">
+							<dl>
+								<dt>Who:</dt>
+								<dd><%= ownerName %></dd>
+								<br>
+								<dt><%= priceP %></dt>
+								<dd><%= price %></dd>
+							</dl>
+							</div>
+							<div class="col-md-4">
+							<dl>
+								<dt><%= capacityC %></dt>
+								<dd><%= capacity %></dd>
+								<br>
+								<dt><%= leftSpaceL %></dt>
+								<dd id="leftSpace"><%= leftSpace %></dd>
+							</dl>
+							</div>
+						</div>
 					</div>
 				</div>
 				<br>
@@ -84,7 +93,7 @@
 					<div class="col-md-12">
 						<dl>
 							<dt>What:</dt>
-							<dd><%= description %></dd>
+							<dd><div id="description"><%= description %></div></dd>
 						</dl>
 					</div>
 				</div>

@@ -4,6 +4,7 @@ var userID;
 
 $(window).on("load", function()
 {	
+	$('#description').html($('#description').html().replace(/&lt;br&gt;/g, '<br>'));
 	$("#email").hide();
 	$("#name").hide();
 	$("#submit").prop("innerHTML","Participate");
