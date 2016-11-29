@@ -21,7 +21,10 @@
 	<div class="row">
 	<div class="col-md-2"></div>
 	<div class="col-md-8">
-		<div class="panel panel-default">
+		<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">You have benn invited:</h3>
+		</div>
 			<div class="panel-body">
 				<div class="row">
 					<div class="col-md-12">
@@ -56,7 +59,7 @@
 				<div class="row">
 					<div class="col-md-9">
 						<div id="imageContainer">
-							<img src="<%= image %>" alt="error loading image" class="img-thumbnail" id="image">
+							<img src="<%= image %>" alt="error loading image" class="img" id="image">
 						</div>
 					</div>
 					<div class="col-md-3">
@@ -66,7 +69,7 @@
 							<dt>When:</dt>
 							<dd><%= dateStart %></dd>
 							<dt>Registration ends:</dt>
-							<dd><%= dateReg %></dd>
+							<dd id="dateReg"><%= dateReg %></dd>
 							<dt><%= capacityC %></dt>
 							<dd><%= capacity %></dd>
 							<dt><%= leftSpaceL %></dt>

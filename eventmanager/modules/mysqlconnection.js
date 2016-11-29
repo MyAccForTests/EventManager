@@ -29,8 +29,49 @@ var countFreeSpace = function(evID, res)
 					console.log('receivied for countFreeSpace() from base: '+results.length+' results')
 					connection.release();
 					console.log('connection released for countFreeSpace()');
-					var freeSpace = results[0].freeSpace;
+					var freeSpace;
+					if(results[0]===undefined)
+					{
+						freeSpace=null;
+					}
+					else
+					{
+						freeSpace = results[0].freeSpace;
+					}
 					res(freeSpace);
+				};
+			});
+		};
+	});
+}
+
+var checkUserSubscribsion = function(personID, evID, res)
+{
+	pool.getConnection(function(err, connection) {
+		if(err) 
+		{
+			console.log('cannot estabilish connection for checkUserSubscribsion()');
+			res(err);
+		} 
+		else
+		{
+			console.log('connected for checkUserSubscribsion() as id '+connection.threadId);
+			connection.query('SELECT * FROM eventperson WHERE Event=? AND Person=?', [[evID],[personID]],
+			function(err, results, fields)
+			{
+				if(err) 
+				{
+					console.log('query from checkUserSubscribsion() unsuccessful');
+					connection.release();
+					console.log('connection released after bad query in checkUserSubscribsion()');
+					res(err);
+				}
+				else
+				{
+					console.log('receivied for checkUserSubscribsion() from base: '+results.length+' results')
+					connection.release();
+					console.log('connection released for checkUserSubscribsion()');
+					res(results.length);
 				};
 			});
 		};
@@ -413,6 +454,7 @@ var getPersonById = function(id, res)
 	});
 }
 
+module.exports.checkUserSubscribsion = checkUserSubscribsion;
 module.exports.countFreeSpace = countFreeSpace;
 module.exports.putPerson = putPerson;
 module.exports.putEvent = putEvent;

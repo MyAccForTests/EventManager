@@ -4,56 +4,76 @@ var userID;
 
 $(window).on("load", function()
 {	
+	$("#email").hide();
+	$("#name").hide();
+	$("#submit").prop("innerHTML","Participate");
 	setFreeSpace();
 	$("#err").hide();
 	var ck=Cookies.getJSON('ck');
 	if(ck===undefined||ck.userID=="")
 	{	
-		$("#email").hide();
-		$("#name").hide();
 		$("#submit").on("click",participate);
-		$("#submit").prop("innerHTML","Participate");
-		
 	}
 	else
 	{
 		userID=ck.userID;
 		$("#err").hide();
-		$("#name").show();
-		$("#email").show();
-		$("#name").prop("readonly","true");
-		$("#email").prop("readonly","true");
 		var data = 
 		{
 			url : servAdress+"/user",
 			method : "POST",
 			data :
 			{
-				id	:	userID
+				userID	:	userID,
+				evID	:	evID
 			}
 		}
 		var post = $.ajax(data);
-		post.done(function(user)
+		post.done(function(resp)
 		{
-			$("#name").val(user.name);
-			$("#email").val(user.email);
+			if(resp.isSubscribed)
+			{
+				$("#name").val(resp.user.name);
+				$("#email").val(resp.user.email);
+				$("#name").show();
+				$("#email").show();
+				$("#name").prop("readonly","true");
+				$("#email").prop("readonly","true");
+				$("#submit").on("click",unsub);
+				$("#submit").prop("innerHTML","Unsubscribe!")
+			}
+			else
+			{
+				$("#submit").on("click",participate);
+				Cookies.remove('ck', { path: window.location.pathname });
+			}
 		});
 		post.fail(function(user)
 		{
 			$("#errMessage").prop("innerHTML","Error loading user information");
 			$("#err").show();
 		});
-		$("#submit").on("click",unsub);
-		$("#submit").prop("innerHTML","Unsubscribe!")
+		
 	}
 });
 
 var participate=function()
 {	
-	$("#email").show();
-	$("#submit").prop("innerHTML","Next");
-	$("#submit").on("click",check);
-	$("#submit").unbind("click",participate);
+	var nowDate=new Date();
+	var dateReg=new Date($("#dateReg").prop("innerHTML"));
+	if(nowDate>dateReg)
+	{
+		
+		$("#errMessage").prop("innerHTML","Sorry, registration has ended");
+		$("#err").show();
+	}
+	else
+	{
+		$("#email").show();
+		$("#submit").prop("innerHTML","Next");
+		$("#submit").on("click",check);
+		$("#submit").unbind("click",participate);
+	}
 }
 var check=function()
 {
@@ -67,26 +87,46 @@ var check=function()
 			method : "POST",
 			data :
 			{
-				name : "",
-				email : email
+				evID	:	evID,
+				email 	: 	email
 			}
 		}
 		var post = $.ajax(data);
-		post.done(function(user)
+		post.done(function(resp)
 		{
-			var name=user.name;
+			var name=resp.user.name;
 			$("#name").show();
 			$("#name").val("");
-			if(name!="")
+			var wasSubscribed=resp.wasSubscribed;;
+			if(wasSubscribed)
 			{
 				$("#name").val(name);
-				userID=user.id;
+				$("#name").prop("readonly",true);
+				userID=resp.user.id;
+				var ck = 
+						{
+							userID	:	userID,
+							evID	:	evID
+						}
+				Cookies.set('ck', ck, { path: window.location.pathname, expires: 356 });
+				$("#submit").prop("innerHTML","Unsubscribe!")
+				$("#submit").on("click",unsub);
+				$("#errMessage").prop("innerHTML","You already subscribed, cookies restored");
+				$("#err").show();
+			}
+			else
+			{
+				if(name!="")
+				{
+					$("#name").val(name);
+					userID=resp.user.id;
+				}
+				$("#submit").prop("innerHTML","Subscribe!")
+				$("#submit").on("click",sub);
+				$("#err").hide();
 			}
 			$("#email").prop("readonly","true");
-			$("#submit").prop("innerHTML","Subscribe!")
 			$("#submit").unbind("click",check);
-			$("#submit").on("click",sub);
-			$("#err").hide();
 		});
 		post.fail(function(user)
 		{
@@ -108,6 +148,7 @@ var sub=function()
 			method : "POST",
 			data :	
 			{
+				dateReg :	$("#dateReg").prop("innerHTML"),
 				userID 	:	userID,
 				evID	:	evID,
 				name	:	name,
@@ -120,6 +161,11 @@ var sub=function()
 				if(resp=="no_space")
 				{
 					$("#errMessage").prop("innerHTML","There is no free space, sorry.");
+					$("#err").show();
+				}
+				else if(resp=="reg_closed")
+				{
+					$("#errMessage").prop("innerHTML","Sorry, registration has ended");
 					$("#err").show();
 				}
 				else

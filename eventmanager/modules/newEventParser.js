@@ -8,7 +8,7 @@ var parseNewEventPerson = function(req)
 
 var parseNewEventEvent = function(req)
 {
-	var imgLink="";
+	var imgLink=null;
 	var price=req.body.price;
 	var capacity=req.body.capacity;
 	if(capacity==""){capacity=null};

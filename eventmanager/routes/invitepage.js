@@ -11,9 +11,9 @@ router.get('/*', function(req, res) {
 		var leftL="Left space:";
 		var leftS="0";
 		var prP="Price:";
-		if(ev.img=="")
+		if(ev.img==null)
 		{
-			ev.img= '../images/eventInviteImagePlaceholder.jpg';
+			ev.img= '../images/eventInviteImagePlaceholder.png';
 		}
 		else 
 		{
@@ -59,37 +59,50 @@ router.post('/getfreespace', function(req, res) {
 });
 
 router.post('/sub', function(req, res) {
-	var userID=req.body.userID;
-	var evID=req.body.evID;
-	var person=new Person(req.body.name,req.body.email);
-	if(userID===undefined||userID=="")
+	var nowDate=new Date();
+	var dateReg=new Date(req.body.dateReg);
+	if(nowDate>dateReg)
 	{
-		DBConnection.putPerson(person, function(result){
-			userID=result.insertId;
-			subsc(userID, evID, res);
-		});
+		res.writeHead(200, {'Content-Type': 'text/event-stream'});
+		res.end("reg_closed");
 	}
 	else
 	{
-		DBConnection.getPersonById(userID,function(user){
-			if(user.name!=req.body.name)
-			{;
-				DBConnection.updatePersonName(person,function(result){
-					subsc(userID, evID, res);
-				});
-			}
+		var userID=req.body.userID;
+		var evID=req.body.evID;
+		var person=new Person(req.body.name,req.body.email);
+		if(userID===undefined||userID=="")
+		{
+			DBConnection.putPerson(person, function(result){
+				userID=result.insertId;
+				subsc(userID, evID, res);
+			});
+		}
+		else
+		{
+			DBConnection.getPersonById(userID,function(user){
+				if(user.name!=req.body.name)
+				{
+					DBConnection.updatePersonName(person,function(result){
+						subsc(userID, evID, res);
+					});
+				}
 			else
-			{
-				subsc(userID, evID, res);	
-			}					
-		});
-	}	
+				{
+					subsc(userID, evID, res);	
+				}					
+			});
+		}
+	}
 });
+	
+	
+
 
 var subsc = function(userID, evID, res)
 {
 	DBConnection.countFreeSpace(evID, function(result){
-		if(result>0)
+		if(result>0||result==null)
 		{
 			DBConnection.subscribe(userID, evID, function(result2)								//check results, if err-notify user, if no link-send error page
 			{
@@ -124,20 +137,48 @@ router.post('/unsub', function(req, res) {
 });
 
 router.post('/email', function(req, res) {
-	var person=req.body;
+	var person=new Person("",req.body.email);
+	var evID=req.body.evID;
 	DBConnection.getPersonByEmail(person, 
 	function(user){
-		res.setHeader('Content-Type', 'application/json');								//check results, if err-notify user
-		res.send(JSON.stringify(user));
+		DBConnection.checkUserSubscribsion(user.id, evID, 
+		function(count){
+			var wasSubscribed=false;
+			if(count>0)
+			{
+				wasSubscribed=true;
+			}
+			var sub=
+				{
+					user				:	user,
+					wasSubscribed		:	wasSubscribed,
+				}
+			res.setHeader('Content-Type', 'application/json');								//check results, if err-notify user
+			res.send(JSON.stringify(sub));
+		});
 	});
 });
 
 router.post('/user', function(req, res) {
-	var id=req.body.id;
-	DBConnection.getPersonById(id, 
-	function(user){
-		res.setHeader('Content-Type', 'application/json');								//check results, if err-notify user
-		res.send(JSON.stringify(user));
+	var userID=req.body.userID;
+	var evID=req.body.evID;
+	DBConnection.checkUserSubscribsion(userID, evID,
+	function(count){
+		var isSubscribed=false;
+		if(count>0)
+		{
+			isSubscribed=true;
+		}
+		DBConnection.getPersonById(userID, 
+			function(user){
+			res.setHeader('Content-Type', 'application/json');								//check results, if err-notify user
+			var sub=
+			{
+				user				:	user,
+				isSubscribed		:	isSubscribed,
+			}
+			res.send(JSON.stringify(sub));
+		});
 	});
 });
 
