@@ -147,7 +147,7 @@ var unsubscribe = function(personID, evID, res)
 var subscribe = function(personID, evID, res)
 {
 	pool.getConnection(function(err, connection) {
-		if("db_error")
+		if(err)
 		{
 			console.log('cannot estabilish connection for subscribe()');
 			res("db_error");
