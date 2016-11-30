@@ -6,6 +6,9 @@ $(window).on("load", function()
 {	
 	$('#description').html($('#description').html().replace(/&lt;br&gt;/g, '<br>'));
 	$("#email").hide();
+	$("#pass").hide();
+	$("#passNew").hide();
+	$("#passHint").hide();
 	$("#name").hide();
 	$("#submit").prop("innerHTML","Participate");
 	setFreeSpace();
@@ -26,7 +29,8 @@ $(window).on("load", function()
 			data :
 			{
 				userID	:	userID,
-				evID	:	evID
+				evID	:	evID,
+				pass	:	ck.pass
 			}
 		}
 		var post = $.ajax(data);
@@ -38,10 +42,16 @@ $(window).on("load", function()
 				$("#email").val(resp.user.email);
 				$("#name").show();
 				$("#email").show();
-				$("#name").prop("readonly","true");
-				$("#email").prop("readonly","true");
+				$("#name").prop("readonly",true);
+				$("#email").prop("readonly",true);
 				$("#submit").on("click",unsub);
 				$("#submit").prop("innerHTML","Unsubscribe!")
+			}
+			else if(resp=="wrong_pass")
+			{
+				$("#errMessage").prop("innerHTML","Bad cookies");
+				$("#err").show();
+				Cookies.remove('ck', { path: window.location.pathname });
 			}
 			else
 			{
@@ -51,7 +61,7 @@ $(window).on("load", function()
 		});
 		post.fail(function(user)
 		{
-			$("#errMessage").prop("innerHTML","Error loading user information");
+			$("#errMessage").prop("innerHTML","Server error, try again later!");
 			$("#err").show();
 		});
 		
@@ -78,6 +88,7 @@ var participate=function()
 }
 var check=function()
 {
+	$("#err").hide();
 	$("#name").prop("readonly",false);
 	var email=$("#email").val();
 	if(email!="")
@@ -88,59 +99,112 @@ var check=function()
 			method : "POST",
 			data :
 			{
-				evID	:	evID,
 				email 	: 	email
 			}
 		}
 		var post = $.ajax(data);
 		post.done(function(resp)
 		{
-			var name=resp.user.name;
-			$("#name").show();
-			$("#name").val("");
-			var wasSubscribed=resp.wasSubscribed;;
-			if(wasSubscribed)
+			$("#email").prop("readonly",true);
+			if(resp.user.email!="")
 			{
-				$("#name").val(name);
-				$("#name").prop("readonly",true);
-				userID=resp.user.id;
-				var ck = 
-						{
-							userID	:	userID,
-							evID	:	evID
-						}
-				Cookies.set('ck', ck, { path: window.location.pathname, expires: 356 });
-				$("#submit").prop("innerHTML","Unsubscribe!")
-				$("#submit").on("click",unsub);
-				$("#errMessage").prop("innerHTML","You already subscribed, cookies restored");
-				$("#err").show();
+				$("#pass").show();
+				$("#passNew").show();
+				$("#passHint").show();
+				$("#submit").unbind("click",check);
+				$("#submit").on("click",checkPass);
 			}
 			else
 			{
-				if(name!="")
-				{
-					$("#name").val(name);
-					userID=resp.user.id;
-				}
+				$("#name").show();
+				$("#name").val("");
+				$("#submit").unbind("click",check);
 				$("#submit").prop("innerHTML","Subscribe!")
 				$("#submit").on("click",sub);
-				$("#err").hide();
 			}
-			$("#email").prop("readonly","true");
-			$("#submit").unbind("click",check);
 		});
 		post.fail(function(user)
 		{
-			$("#errMessage").prop("innerHTML","Error checking email, try again later");
+			$("#errMessage").prop("innerHTML","Server error, try again later!");
 			$("#err").show();
 		});
 	}
+}
+
+var checkPass=function()
+{
+	$("#err").hide();
+	var email=$("#email").val();
+	var pass=$("#pass").val();
+	var data = 
+		{
+			url : servAdress+"/checkpass",
+			method : "POST",
+			data :
+			{
+				evID	:	evID,
+				pass	:	pass,
+				email 	: 	email
+			}
+		}
+		var post = $.ajax(data);
+		post.done(function(resp)
+		{
+			if(resp.passCheck)
+			{
+				$("#pass").hide();
+				$("#passNew").hide();
+				$("#passHint").hide();
+				$("#name").show();
+				$("#name").val("");
+				$("#email").prop("readonly",true);
+				var name=resp.user.name;
+				$("#name").val(name);
+				userID=resp.user.id;
+				var wasSubscribed=resp.wasSubscribed;
+				if(wasSubscribed)
+				{
+					$("#name").prop("readonly",true);
+					var ck = 
+							{
+								userID	:	userID,
+								evID	:	evID,
+								pass	:	pass
+							}
+					Cookies.set('ck', ck, { path: window.location.pathname, expires: 356 });
+					$("#submit").prop("innerHTML","Unsubscribe!")
+					$("#submit").on("click",unsub);
+					$("#submit").unbind("click",checkPass);
+					$("#errMessage").prop("innerHTML","You already subscribed, cookies restored");
+					$("#err").show();
+					$("#pass").val("");
+				}
+				else
+				{
+					$("#submit").prop("innerHTML","Subscribe!")
+					$("#submit").on("click",sub);
+					$("#submit").unbind("click",checkPass);
+					$("#err").hide();
+				}
+			}
+			else
+			{
+				$("#errMessage").prop("innerHTML","Wrong password");
+				$("#err").show();
+			}
+		});
+		post.fail(function(user)
+		{
+			$("#errMessage").prop("innerHTML","Server error, try again later!");
+			$("#err").show();
+		});
 }
 
 var sub=function()
 {
 	var name=$("#name").val();
 	var email=$("#email").val();
+	var pass=$("#pass").val();
 	if(name!="")
 	{
 		var data = 
@@ -153,7 +217,8 @@ var sub=function()
 				userID 	:	userID,
 				evID	:	evID,
 				name	:	name,
-				email 	: 	email
+				email 	: 	email,
+				pass	:	pass
 			}
 		}
 		var post = $.ajax(data);
@@ -161,7 +226,7 @@ var sub=function()
 		{
 				if(resp=="no_space")
 				{
-					$("#errMessage").prop("innerHTML","There is no free space, sorry.");
+					$("#errMessage").prop("innerHTML","There is no free space, sorry");
 					$("#err").show();
 				}
 				else if(resp=="reg_closed")
@@ -169,9 +234,18 @@ var sub=function()
 					$("#errMessage").prop("innerHTML","Sorry, registration has ended");
 					$("#err").show();
 				}
+				else if(resp=="wrong_pass")
+				{
+					$("#errMessage").prop("innerHTML","Wrong password");
+					$("#err").show();
+				}
 				else
 				{
-					$("#name").prop("readonly","true");
+					if((JSON.parse(resp)).pass!="")
+					{
+						pass=(JSON.parse(resp)).pass;
+					}
+					$("#name").prop("readonly",true);
 					$("#submit").unbind("click",sub);
 					$("#submit").prop("innerHTML","Unsubscribe!")
 					$("#submit").on("click",unsub);
@@ -180,48 +254,61 @@ var sub=function()
 					var ck = 
 						{
 							userID	:	userID,
-							evID	:	evID
+							evID	:	evID,
+							pass	:	pass
 						}
 					Cookies.set('ck', ck, { path: window.location.pathname, expires: 356 });
 					$("#err").hide();
+					$("#pass").val("");
 				}
 				setFreeSpace();
 		});
 		post.fail(function(user)
 		{
-			$("#errMessage").prop("innerHTML","Error during subscribing, try again later");
+			$("#errMessage").prop("innerHTML","Server error, try again later!");
 			$("#err").show();
 		});
 	}
 }
 var unsub=function()
 {
+	$("#err").hide();
 	var data = 
 		{
 			url : servAdress+"/unsub",
 			method : "POST",
 			data :	{
-						userID : userID,
-						evID : evID
+						userID		:	userID,
+						evID	 	: 	evID,
+						pass		:	Cookies.getJSON('ck').pass
 					}
 		}
 	var post = $.ajax(data);
 	post.done(function(resp)
 		{
+			if(resp=="wrong_pass")
+				{
+					$("#errMessage").prop("innerHTML","Bad cookies, please reload page");
+					$("#err").show();
+				}
+				else
+				{
+					$("#submit").unbind("click",unsub);
+					$("#submit").on("click",participate);
+					$("#submit").prop("innerHTML","Participate");
+					$("#email").hide();
+					$("#name").hide();
+					$("#err").hide();
+					$("#email").prop("readonly",false);
+					setFreeSpace();
+					userID="";
+					$("#pass").val("");
+				}
 			Cookies.remove('ck', { path: window.location.pathname });
-			$("#submit").unbind("click",unsub);
-			$("#submit").on("click",participate);
-			$("#submit").prop("innerHTML","Participate");
-			$("#email").hide();
-			$("#name").hide();
-			$("#err").hide();
-			$("#email").prop("readonly",false);
-			setFreeSpace();
-			userID="";
 		});
 	post.fail(function(resp)
 		{
-			$("#errMessage").prop("innerHTML","Error during unsubscribing, try again later");
+			$("#errMessage").prop("innerHTML","Server error, try again later!");
 			$("#err").show();
 		});
 }
@@ -244,4 +331,29 @@ var setFreeSpace = function(leftSpace)
 				$("#leftSpace").prop("innerHTML",resp);
 			}
 		});
+}
+
+var newPassword=function()
+{
+	$("#err").hide();
+	var data = 
+	{
+		url : servAdress+"/newpass",
+		method : "POST",
+		data :
+		{
+			email 	: 	$("#email").val(),
+		}
+	}
+	var post = $.ajax(data);
+	post.done(function(resp)
+	{
+		$("#err").show();
+		$("#errMessage").prop('innerHTML','New password was send to your email');
+	});
+	post.fail(function(err)
+	{
+		$("#err").show();
+		$("#errMessage").prop('innerHTML','Server error, try again later!');
+	});
 }

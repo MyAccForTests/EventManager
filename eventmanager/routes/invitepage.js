@@ -2,6 +2,7 @@
 var express = require('express');
 var router = express.Router();
 var path = require('path');
+var generatePassword = require('password-generator');
 
 router.get('/*', function(req, res) {
 	var lnk = req.originalUrl;
@@ -58,6 +59,26 @@ router.get('/*', function(req, res) {
 	});
 });
 
+router.post('/newpass', function(req, res) {
+	var person=req.body;
+	var pass=generatePassword(6, true);
+	person.pass=pass;
+	DBConnection.updatePersonPass(person, 
+	function(user){
+		if(user=="db_error")
+		{
+			res.status(500).send('Server problem, try again later!');
+		}
+		else
+		{
+			res.setHeader('Content-Type', 'application/json');								
+			res.send(JSON.stringify(true));
+			//emailSender.sendPassNotification(ev);											//send email new password
+		}
+	});
+});
+
+
 router.post('/getfreespace', function(req, res) {
 	DBConnection.countFreeSpace(req.body.evID, function(result){
 		if(result=="db_error")
@@ -84,9 +105,18 @@ router.post('/sub', function(req, res) {
 	{
 		var userID=req.body.userID;
 		var evID=req.body.evID;
+		var eve = 
+		{
+			evID	:	evID,
+			userID	:	userID,
+			pass	:	""
+		}
 		var person=new Person(req.body.name,req.body.email);
 		if(userID===undefined||userID=="")
 		{
+			var pass=generatePassword(6, true);
+			person.pass=pass;
+			eve.pass=pass;
 			DBConnection.putPerson(person, function(result){
 				if(result=="db_error")
 				{
@@ -95,7 +125,9 @@ router.post('/sub', function(req, res) {
 				else
 				{
 					userID=result.insertId;
-					subsc(userID, evID, res);
+					eve.userID=userID;
+					//emailSender.sendPassNotification(ev);											//send email with password for new user
+					subsc(eve, res);
 				}	
 			});
 		}
@@ -105,6 +137,11 @@ router.post('/sub', function(req, res) {
 				if(user=="db_error")
 				{
 					res.status(500).send('Server problem, try again later!');
+				}
+				else if(user.pass!=req.body.pass)
+				{
+					res.writeHead(200, {'Content-Type': 'text/event-stream'});
+					res.end("wrong_pass");
 				}
 				else
 				{
@@ -117,13 +154,13 @@ router.post('/sub', function(req, res) {
 							}
 							else
 							{
-								subsc(userID, evID, res);
+								subsc(eve, res);
 							}
 						});
 					}
 					else
 					{
-						subsc(userID, evID, res);	
+						subsc(eve, res);	
 					}	
 				}					
 			});
@@ -134,8 +171,10 @@ router.post('/sub', function(req, res) {
 	
 
 
-var subsc = function(userID, evID, res)
+var subsc = function(eve, res)
 {
+	var evID=eve.evID;
+	var userID=eve.userID;
 	DBConnection.countFreeSpace(evID, function(result){
 		if(result=="db_error")
 			{
@@ -152,9 +191,10 @@ var subsc = function(userID, evID, res)
 						{
 							userID		:	userID,
 							evID		:	evID,
+							pass		:	eve.pass
 						}
 					res.end(JSON.stringify(sub));
-					//emailSender.sendPassNotification(ev);											//send email
+					//emailSender.sendPassNotification(ev);											//send email notification registration
 					});
 				}
 				else
@@ -169,24 +209,38 @@ var subsc = function(userID, evID, res)
 router.post('/unsub', function(req, res) {
 	var userID=req.body.userID;
 	var evID=req.body.evID;
-	DBConnection.unsubscribe(userID, evID, function(result)								
-	{
-		if(result=="db_error")
+	var pass=req.body.pass;
+	DBConnection.getPersonById(userID,function(user){
+		if(user=="db_error")
+		{
+			res.status(500).send('Server problem, try again later!');
+		}
+		else if(user.pass!=req.body.pass)
+		{
+			res.writeHead(200, {'Content-Type': 'text/event-stream'});
+			res.end("wrong_pass");
+		}
+		else
+		{
+			DBConnection.unsubscribe(userID, evID, function(result)								
 			{
-				res.status(500).send('Server problem, try again later!');
-			}
-			else
-			{
-				res.writeHead(200, {'Content-Type': 'text/event-stream'});
-				res.end();																		
-				//emailSender.sendPassNotification(ev);											//send email
-			}
+				if(result=="db_error")
+				{
+					res.status(500).send('Server problem, try again later!');
+				}
+				else
+				{
+					res.writeHead(200, {'Content-Type': 'text/event-stream'});
+					res.end();																		
+					//emailSender.sendPassNotification(ev);											//send email unsubscribe
+				}
+			});
+		}
 	});
 });
 
 router.post('/email', function(req, res) {
 	var person=new Person("",req.body.email);
-	var evID=req.body.evID;
 	DBConnection.getPersonByEmail(person, 
 	function(user){
 		if(user=="db_error")
@@ -195,6 +249,37 @@ router.post('/email', function(req, res) {
 			}
 			else
 			{
+				var sub=
+						{
+							user				:	user,
+						}
+				res.setHeader('Content-Type', 'application/json');								
+				res.send(JSON.stringify(sub));
+			}
+	});
+});
+
+router.post('/checkpass', function(req, res) {
+	var person=new Person("",req.body.email);
+	var evID=req.body.evID;
+	person.pass=req.body.pass;
+	DBConnection.getPersonByEmail(person, 
+	function(user){
+		if(user=="db_error")
+		{
+			res.status(500).send('Server problem, try again later!');
+		}
+		else
+		{
+			var sub=
+				{
+					user				:	"",
+					wasSubscribed		:	"",
+					passCheck			:	false
+				}
+			if(user.pass==person.pass)
+			{
+				sub.passCheck=true;
 				DBConnection.checkUserSubscribsion(user.id, evID, 
 				function(count){
 					if(count=="db_error")
@@ -203,30 +288,47 @@ router.post('/email', function(req, res) {
 					}
 					else
 					{
+						user.pass="";
 						var wasSubscribed=false;
 						if(count>0)
 						{
 							wasSubscribed=true;
 						}
-						var sub=
-						{
-							user				:	user,
-							wasSubscribed		:	wasSubscribed,
-						}
+						sub.user=user;
+						sub.wasSubscribed=wasSubscribed;
 						res.setHeader('Content-Type', 'application/json');								
 						res.send(JSON.stringify(sub));
 					}
 				});
 			}
+			else
+			{
+				res.setHeader('Content-Type', 'application/json');								
+				res.send(JSON.stringify(sub));
+			}
+		}
 	});
 });
 
 router.post('/user', function(req, res) {
 	var userID=req.body.userID;
 	var evID=req.body.evID;
-	DBConnection.checkUserSubscribsion(userID, evID,
-	function(count){
-		if(count=="db_error")
+	var pass=req.body.pass;
+	DBConnection.getPersonById(userID,function(user){
+		if(user=="db_error")
+		{
+			res.status(500).send('Server problem, try again later!');
+		}
+		else if(user.pass!=pass)
+		{
+			res.writeHead(200, {'Content-Type': 'text/event-stream'});
+			res.end("wrong_pass");
+		}
+		else
+		{
+			DBConnection.checkUserSubscribsion(userID, evID,
+			function(count){
+			if(count=="db_error")
 			{
 				res.status(500).send('Server problem, try again later!');
 			}
@@ -238,24 +340,29 @@ router.post('/user', function(req, res) {
 					isSubscribed=true;
 				}
 				DBConnection.getPersonById(userID, 
-				function(user){
-					if(user=="db_error")
-					{
-						res.status(500).send('Server problem, try again later!');
-					}
-					else
-					{
-						res.setHeader('Content-Type', 'application/json');								
-						var sub=
+					function(user){
+						if(user=="db_error")
 						{
-							user				:	user,
-							isSubscribed		:	isSubscribed,
+							res.status(500).send('Server problem, try again later!');
 						}
-						res.send(JSON.stringify(sub));
-					}
-			
-				});
-			}
+						else if(user.pass!=pass)
+						{
+							res.writeHead(200, {'Content-Type': 'text/event-stream'});
+							res.end("wrong_pass");
+						}
+						{
+							res.setHeader('Content-Type', 'application/json');								
+							var sub=
+							{
+								user				:	user,
+								isSubscribed		:	isSubscribed,
+							}
+							res.send(JSON.stringify(sub));
+						}
+					});
+				}
+			});
+		}
 	});
 });
 

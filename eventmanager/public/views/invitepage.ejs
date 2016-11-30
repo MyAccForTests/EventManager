@@ -36,6 +36,13 @@
 				</div>
 				<div class="col-md-3">
 						<input type="text" id="name" name="name" placeholder="Enter your name" class="form-control" maxlength="50" autocomplete="false" required>
+						<input type="text" id="passHint" class="form-control" value="Please enter  your password:" disabled>
+				</div>
+				<div class="col-md-3">
+						<input type="password" id="pass" name="pass" placeholder="Password" class="form-control" maxlength="50" autocomplete="false" required>
+						<a href onclick="return false">
+							<span onclick="newPassword()"id="passNew">Send new password to email</span>
+						</a>
 					</form>
 				</div>
 				</div>
