@@ -3,7 +3,9 @@ var express = require('express');
 
 var parseNewEventPerson = function(req)
 {
-	return new Person(req.body.name, req.body.email);
+	var person = new Person(req.body.name, req.body.email);
+	person.pass=req.body.pass;
+	return person;
 }
 
 var parseNewEventEvent = function(req)
@@ -15,7 +17,9 @@ var parseNewEventEvent = function(req)
 	if(price==""){price=null};
 	if(req.file===undefined){}else{imgLink=req.file.path;};
 	var desc=req.body.description.replace(/\r/g,'').replace(/\n/g,'<br>');
-	return new Event(req.body.title, "", desc, new Person(req.body.name, req.body.email), capacity, price, new Date(req.body.date).toISOString().slice(0, 19).replace('T', ' '), new Date(req.body.datereg).toISOString().slice(0, 19).replace('T', ' '), "", "", "", imgLink)
+	var person = new Person(req.body.name, req.body.email);
+	person.pass=req.body.pass;
+	return new Event(req.body.title, desc, person, capacity, price, new Date(req.body.date).toISOString().slice(0, 19).replace('T', ' '), new Date(req.body.datereg).toISOString().slice(0, 19).replace('T', ' '), "", "", "", imgLink)
 }
 
 module.exports.parseNewEventPerson = parseNewEventPerson;

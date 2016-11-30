@@ -9,7 +9,7 @@ var countFreeSpace = function(evID, res)
 		if(err) 
 		{
 			console.log('cannot estabilish connection for countFreeSpace()');
-			res(err);
+			res("db_error");
 		} 
 		else
 		{
@@ -22,7 +22,7 @@ var countFreeSpace = function(evID, res)
 					console.log('query from countFreeSpace() unsuccessful');
 					connection.release();
 					console.log('connection released after bad query in countFreeSpace()');
-					res(err);
+					res("db_error");
 				}
 				else
 				{
@@ -51,7 +51,7 @@ var checkUserSubscribsion = function(personID, evID, res)
 		if(err) 
 		{
 			console.log('cannot estabilish connection for checkUserSubscribsion()');
-			res(err);
+			res("db_error");
 		} 
 		else
 		{
@@ -64,7 +64,7 @@ var checkUserSubscribsion = function(personID, evID, res)
 					console.log('query from checkUserSubscribsion() unsuccessful');
 					connection.release();
 					console.log('connection released after bad query in checkUserSubscribsion()');
-					res(err);
+					res("db_error");
 				}
 				else
 				{
@@ -84,7 +84,7 @@ var getPersonsIDByEventId = function(evID, res)
 		if(err) 
 		{
 			console.log('cannot estabilish connection for getPersonsIDByEventId()');
-			res(err);
+			res("db_error");
 		} 
 		else
 		{
@@ -97,7 +97,7 @@ var getPersonsIDByEventId = function(evID, res)
 					console.log('query from getPersonsIDByEventId() unsuccessful');
 					connection.release();
 					console.log('connection released after bad query in getPersonsIDByEventId()');
-					res(err);
+					res("db_error");
 				}
 				else
 				{
@@ -117,6 +117,7 @@ var unsubscribe = function(personID, evID, res)
 		if(err)
 		{
 			console.log('cannot estabilish connection for unsubscribe()');
+			res("db_error");
 		} 
 		else
 		{
@@ -129,7 +130,7 @@ var unsubscribe = function(personID, evID, res)
 					console.log('query from unsubscribe() unsuccessful');
 					connection.release();
 					console.log('connection released after bad query in unsubscribe()');
-					res(err);
+					res("db_error");
 				}
 				else
 				{
@@ -146,9 +147,10 @@ var unsubscribe = function(personID, evID, res)
 var subscribe = function(personID, evID, res)
 {
 	pool.getConnection(function(err, connection) {
-		if(err)
+		if("db_error")
 		{
 			console.log('cannot estabilish connection for subscribe()');
+			res("db_error");
 		} 
 		else
 		{
@@ -161,7 +163,7 @@ var subscribe = function(personID, evID, res)
 					console.log('query from subscribe() unsuccessful');
 					connection.release();
 					console.log('connection released after bad query in subscribe()');
-					res(err);
+					res("db_error");
 				}
 				else
 				{
@@ -181,12 +183,12 @@ var putPerson = function(person, res)
 		if(err)
 		{
 			console.log('cannot estabilish connection for putPerson()');
-			res(err);
+			res("db_error");
 		} 
 		else
 		{
 			console.log('connected for putPerson() as id '+connection.threadId);
-			connection.query('INSERT INTO person (name, email) VALUES (?,?)', [[person.name],[person.email]],
+			connection.query('INSERT INTO person (name, email, password) VALUES (?,?,?)', [[person.name],[person.email],[person.pass]],
 			function(err, result)
 			{
 				if(err) 
@@ -194,13 +196,47 @@ var putPerson = function(person, res)
 					console.log('query from putPerson() unsuccessful');
 					connection.release();
 					console.log('connection released after bad query in putPerson()');
-					res(err);
+					res("db_error");
 				}
 				else
 				{
 					console.log('putting to db for putPerson() successful')
 					connection.release();
 					console.log('connection released for putPerson()');
+					res(result);
+				}
+			});
+		};
+	});
+}
+
+var updatePersonPass = function(person, res)
+{
+	pool.getConnection(function(err, connection) {
+		if(err) 
+		{
+			console.log('cannot estabilish connection for updatePersonPass()');
+			connection.release();
+			res("db_error");
+		} 
+		else
+		{
+			console.log('connected for updatePersonPass() as id '+connection.threadId);
+			connection.query('UPDATE person SET password=? WHERE email=?', [[person.pass],[person.email]],
+			function(err, result)
+			{
+				if(err) 
+				{
+					console.log('query from updatePersonPass() unsuccessful');
+					connection.release();
+					console.log('connection released after bad query in updatePersonPass()');
+					res("db_error");
+				}
+				else
+				{
+					console.log('putting to db for updatePersonPass() successful')
+					connection.release();
+					console.log('connection released for updatePersonPass()');
 					res(result);
 				}
 			});
@@ -215,7 +251,7 @@ var updatePersonName = function(person, res)
 		{
 			console.log('cannot estabilish connection for updatePerson()');
 			connection.release();
-			res(err);
+			res("db_error");
 		} 
 		else
 		{
@@ -228,7 +264,7 @@ var updatePersonName = function(person, res)
 					console.log('query from updatePerson() unsuccessful');
 					connection.release();
 					console.log('connection released after bad query in updatePerson()');
-					res(err);
+					res("db_error");
 				}
 				else
 				{
@@ -248,7 +284,7 @@ var putEvent = function(ev,res)
 		if(err) 
 		{
 			console.log('cannot estabilish connection for putEvent()');
-			res(err);
+			res("db_error");
 		} 
 		else
 		{
@@ -257,8 +293,8 @@ var putEvent = function(ev,res)
 			getPersonByEmail(ev.owner,
 			function(user)
 			{
-				var addEve=function(id) {connection.query('INSERT INTO event (Password, Title, Description, Owner, Capacity, Price, OwnerLink, SubmitLink, Date, Deadline, Link, Image) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)', 
-				[[ev.pass],[ev.title],[ev.description],[id],[ev.capacity],[ev.price],[ev.ownlnk],[ev.sublnk],[ev.date],[ev.datereg],[ev.lnk],[ev.img]],
+				var addEve=function(id) {connection.query('INSERT INTO event (Title, Description, Owner, Capacity, Price, OwnerLink, SubmitLink, Date, Deadline, Link, Image) VALUES (?,?,?,?,?,?,?,?,?,?,?)', 
+				[[ev.title],[ev.description],[id],[ev.capacity],[ev.price],[ev.ownlnk],[ev.sublnk],[ev.date],[ev.datereg],[ev.lnk],[ev.img]],
 				function(err, result)
 					{
 						if(err) 
@@ -266,7 +302,7 @@ var putEvent = function(ev,res)
 							console.log('query from putEvent() unsuccessful');
 							connection.release();
 							console.log('connection released after bad query in putEvent()');
-							res(err);
+							res("db_error");
 						}
 						else
 						{
@@ -278,10 +314,6 @@ var putEvent = function(ev,res)
 						}
 					}
 				)}
-				if(ev.owner.name!=user.name)
-				{
-					updatePersonName(ev.owner,function(result){console.log("users updated: "+result.changedRows);});
-				}
 				if(user.email=="")
 				{
 					putPerson(ev.owner,
@@ -292,7 +324,18 @@ var putEvent = function(ev,res)
 				}
 				else
 				{
-					addEve(user.id);
+					if(ev.owner.pass==user.pass)
+					{
+						addEve(user.id);
+						if(ev.owner.name!=user.name)
+						{
+							updatePersonName(ev.owner,function(result){console.log("users updated: "+result.changedRows);});
+						}
+					}
+					else
+					{
+						res("wrong_pass");
+					}
 				}
 			});
 		};
@@ -305,12 +348,12 @@ var getPersonByEmail = function(person, res)
 		if(err) 
 		{
 			console.log('cannot estabilish connection for getPersonByEmail()');
-			res(err);
+			res("db_error");
 		} 
 		else
 		{
 			console.log('connected for getPersonByEmail() as id '+connection.threadId);
-			connection.query('SELECT id, Name, Email FROM person WHERE Email=?', [person.email],
+			connection.query('SELECT id, Name, Email, Password FROM person WHERE Email=?', [person.email],
 			function(err, results, fields)
 			{
 				if(err) 
@@ -318,7 +361,7 @@ var getPersonByEmail = function(person, res)
 					console.log('query from getPersonByEmail() unsuccessful');
 					connection.release();
 					console.log('connection released after bad query in getPersonByEmail()');
-					res(err);
+					res("db_error");
 				}
 				else
 				{
@@ -332,8 +375,10 @@ var getPersonByEmail = function(person, res)
 						var id = results[0].id;
 						var name = results[0].Name;
 						var email= results[0].Email;
+						var pass= results[0].Password;
 						var user=new Person(name, email);
 						user.id=id;
+						user.pass=pass;
 					}
 					connection.release();
 					console.log('connection released for getPersonByEmail()');
@@ -350,7 +395,7 @@ var getEventByLink = function(lnk, res)
 		if(err) 
 		{
 			console.log('cannot estabilish connection for getEventByLink()');
-			res(err);
+			res("db_error");
 		} 
 		else
 		{
@@ -360,7 +405,7 @@ var getEventByLink = function(lnk, res)
 			if(lnk.slice(0,1)=="i") llnk="Link";
 			if(lnk.slice(0,1)=="o") llnk="OwnerLink";
 			if(lnk.slice(0,1)=="s") llnk="SubmitLink";
-			connection.query('SELECT id, Password, Title, Description, Owner, Capacity, Price, Date, Deadline, Link, OwnerLink, SubmitLink, Image FROM event WHERE '+llnk+'=?', [lnk],
+			connection.query('SELECT id, Title, Description, Owner, Capacity, Price, Date, Deadline, Link, OwnerLink, SubmitLink, Image FROM event WHERE '+llnk+'=?', [lnk],
 			function(err, results, fields)
 			{
 				if(err) 
@@ -368,7 +413,7 @@ var getEventByLink = function(lnk, res)
 					console.log('query from getEventByLink() unsuccessful');
 					connection.release();
 					console.log('connection released after bad query in getEventByLink()');
-					res(err);
+					res("db_error");
 				}
 				else
 				{
@@ -381,7 +426,6 @@ var getEventByLink = function(lnk, res)
 					else
 					{
 						var id = results[0].id;
-						var pass = results[0].Password;
 						var title= results[0].Title;
 						var description= results[0].Description;
 						var ownerId= results[0].Owner;
@@ -396,7 +440,7 @@ var getEventByLink = function(lnk, res)
 						getPersonById(ownerId, function(user)
 						{
 							var owner=user;
-							var ev=new Event(title, pass, description, owner, capacity, price, date, datereg, ownlnk, lnk, sublnk, img);
+							var ev=new Event(title, description, owner, capacity, price, date, datereg, ownlnk, lnk, sublnk, img);
 							ev.id=id;
 							res(ev);
 						});
@@ -415,12 +459,12 @@ var getPersonById = function(id, res)
 		if(err) 
 		{
 			console.log('cannot estabilish connection for getPersonById()');
-			res(err);
+			res("db_error");
 		} 
 		else
 		{
 			console.log('connected for getPersonById() as id '+connection.threadId);
-			connection.query('SELECT id, Name, Email FROM person WHERE id=?', [id],
+			connection.query('SELECT id, Name, Email, Password FROM person WHERE id=?', [id],
 			function(err, results, fields)
 			{
 				if(err) 
@@ -428,7 +472,7 @@ var getPersonById = function(id, res)
 					console.log('query from getPersonById() unsuccessful');
 					connection.release();
 					console.log('connection released after bad query in getPersonById()');
-					res(err);
+					res("db_error");
 				}
 				else
 				{
@@ -442,8 +486,10 @@ var getPersonById = function(id, res)
 						var id = results[0].id;
 						var name = results[0].Name;
 						var email= results[0].Email;
+						var pass= results[0].Password;
 						var user=new Person(name, email);
 						user.id=id;
+						user.pass=pass;
 					}
 					connection.release();
 					console.log('connection released for getPersonById()');
@@ -453,7 +499,7 @@ var getPersonById = function(id, res)
 		};
 	});
 }
-
+module.exports.updatePersonPass = updatePersonPass;
 module.exports.checkUserSubscribsion = checkUserSubscribsion;
 module.exports.countFreeSpace = countFreeSpace;
 module.exports.putPerson = putPerson;

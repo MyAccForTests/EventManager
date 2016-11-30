@@ -26,28 +26,95 @@ router.post('/create',upload.single('img'), function(req, res) {
 	var lnk="i/"+generatePassword(8, false)+Date.now();
 	var ownlnk="o/"+generatePassword(8, false)+Date.now();
 	var sublnk="s/"+generatePassword(8, false)+Date.now();
-	ev.pass=pass;
 	ev.ownlnk=ownlnk;
 	ev.lnk=lnk;
 	ev.sublnk=sublnk;
 	console.log("incoming event:");
+	if(ev.owner.pass=="")
+	{
+		ev.owner.pass=pass;
+	}
 	console.log(ev);
 	DBConnection.putEvent(ev,function(result)
 	{
-		console.log("inserted event, id: "+result.insertId);							//check results, if err-notify user
-		//emailSender.sendPassNotification(ev);											//send email success
-		console.log("event created");
-		res.redirect(servSettings.server.address+ev.sublnk);
+		if(result=="db_error")
+		{
+			res.status(500).send('Server problem, try again later!');
+		}
+		else
+		{
+			if(result=="wrong_pass")
+			{
+				res.end("Wrong password");
+			}
+			else
+			{
+				console.log("inserted event, id: "+result.insertId);							
+				//emailSender.sendPassNotification(ev);											//send email success
+				console.log("event created");
+				res.redirect(servSettings.server.address+ev.sublnk);
+			}	
+		}
 	});
 });
 
 router.post('/email', function(req, res) {
 	var person=req.body;
-	console.log(person);
 	DBConnection.getPersonByEmail(person, 
 	function(user){
-		res.setHeader('Content-Type', 'application/json');								//check results, if err-notify user
-		res.send(JSON.stringify(user));
+		if(user=="db_error")
+		{
+			res.status(500).send('Server problem, try again later!');
+		}
+		else
+		{
+			user.pass="";
+			res.setHeader('Content-Type', 'application/json');								
+			res.send(JSON.stringify(user));
+		}
+	});
+});
+
+router.post('/newpass', function(req, res) {
+	var person=req.body;
+	var pass=generatePassword(6, true);
+	person.pass=pass;
+	DBConnection.updatePersonPass(person, 
+	function(user){
+		if(user=="db_error")
+		{
+			res.status(500).send('Server problem, try again later!');
+		}
+		else
+		{
+			res.setHeader('Content-Type', 'application/json');								
+			res.send(JSON.stringify(true));
+			//emailSender.sendPassNotification(ev);											//send email new password
+		}
+	});
+});
+
+router.post('/checkpass', function(req, res) {
+	var person=req.body;
+	DBConnection.getPersonByEmail(person, 
+	function(user){
+		if(user=="db_error")
+		{
+			res.status(500).send('Server problem, try again later!');
+		}
+		else
+		{
+			if(user.pass==person.pass)
+			{
+			res.setHeader('Content-Type', 'application/json');								
+			res.send(JSON.stringify(true));
+			}
+			else
+			{
+			res.setHeader('Content-Type', 'application/json');								
+			res.send();
+			}
+		}
 	});
 });
 

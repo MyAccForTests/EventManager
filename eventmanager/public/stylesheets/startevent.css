@@ -6,7 +6,7 @@ body, html, .container-fluid
 {
 	resize: none;
 }
-#email, #name, #date, #datereg, #capacity, #price
+#email, #name, #date, #datereg, #capacity, #price, #pass
 {
 	width:100%;
 }
