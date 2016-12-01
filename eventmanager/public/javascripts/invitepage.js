@@ -30,7 +30,6 @@ $(window).on("load", function()
 			{
 				userID	:	userID,
 				evID	:	evID,
-				pass	:	ck.pass
 			}
 		}
 		var post = $.ajax(data);
@@ -46,12 +45,6 @@ $(window).on("load", function()
 				$("#email").prop("readonly",true);
 				$("#submit").on("click",unsub);
 				$("#submit").prop("innerHTML","Unsubscribe!")
-			}
-			else if(resp=="wrong_pass")
-			{
-				$("#errMessage").prop("innerHTML","Bad cookies");
-				$("#err").show();
-				Cookies.remove('ck', { path: window.location.pathname });
 			}
 			else
 			{
@@ -273,44 +266,53 @@ var sub=function()
 var unsub=function()
 {
 	$("#err").hide();
-	var data = 
-		{
-			url : servAdress+"/unsub",
-			method : "POST",
-			data :	{
-						userID		:	userID,
-						evID	 	: 	evID,
-						pass		:	Cookies.getJSON('ck').pass
+	if($("#pass").is(":visible"))
+	{
+		var data = 
+			{
+				url : servAdress+"/unsub",
+				method : "POST",
+				data :	{
+							userID		:	userID,
+							evID	 	: 	evID,
+							pass		:	$("#pass").val()
+						}
+			}
+		var post = $.ajax(data);
+		post.done(function(resp)
+			{
+				if(resp=="wrong_pass")
+					{
+						$("#errMessage").prop("innerHTML","Wrong password");
+						$("#err").show();
 					}
-		}
-	var post = $.ajax(data);
-	post.done(function(resp)
-		{
-			if(resp=="wrong_pass")
-				{
-					$("#errMessage").prop("innerHTML","Bad cookies, please reload page");
-					$("#err").show();
-				}
-				else
-				{
-					$("#submit").unbind("click",unsub);
-					$("#submit").on("click",participate);
-					$("#submit").prop("innerHTML","Participate");
-					$("#email").hide();
-					$("#name").hide();
-					$("#err").hide();
-					$("#email").prop("readonly",false);
-					setFreeSpace();
-					userID="";
-					$("#pass").val("");
-				}
-			Cookies.remove('ck', { path: window.location.pathname });
-		});
-	post.fail(function(resp)
-		{
-			$("#errMessage").prop("innerHTML","Server error, try again later!");
-			$("#err").show();
-		});
+					else
+					{
+						$("#submit").unbind("click",unsub);
+						$("#submit").on("click",participate);
+						$("#submit").prop("innerHTML","Participate");
+						$("#email").hide();
+						$("#name").hide();
+						$("#err").hide();
+						$("#email").prop("readonly",false);
+						setFreeSpace();
+						userID="";
+						$("#pass").hide();
+						$("#pass").val("");
+						Cookies.remove('ck', { path: window.location.pathname });
+					}
+				
+			});
+		post.fail(function(resp)
+			{
+				$("#errMessage").prop("innerHTML","Server error, try again later!");
+				$("#err").show();
+			});
+	}
+	else
+	{
+		$("#pass").show();
+	}
 }
 
 var setFreeSpace = function(leftSpace)

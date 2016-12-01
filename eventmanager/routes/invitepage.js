@@ -313,53 +313,34 @@ router.post('/checkpass', function(req, res) {
 router.post('/user', function(req, res) {
 	var userID=req.body.userID;
 	var evID=req.body.evID;
-	var pass=req.body.pass;
 	DBConnection.getPersonById(userID,function(user){
 		if(user=="db_error")
 		{
 			res.status(500).send('Server problem, try again later!');
 		}
-		else if(user.pass!=pass)
-		{
-			res.writeHead(200, {'Content-Type': 'text/event-stream'});
-			res.end("wrong_pass");
-		}
 		else
 		{
 			DBConnection.checkUserSubscribsion(userID, evID,
-			function(count){
-			if(count=="db_error")
-			{
-				res.status(500).send('Server problem, try again later!');
-			}
-			else
-			{
-				var isSubscribed=false;
-				if(count>0)
+				function(count){
+				if(count=="db_error")
 				{
-					isSubscribed=true;
+					res.status(500).send('Server problem, try again later!');
 				}
-				DBConnection.getPersonById(userID, 
-					function(user){
-						if(user=="db_error")
+				else
+				{
+					var isSubscribed=false;
+					if(count>0)
+					{
+						isSubscribed=true;
+					}
+					
+					res.setHeader('Content-Type', 'application/json');								
+					var sub=
 						{
-							res.status(500).send('Server problem, try again later!');
+							user				:	user,
+							isSubscribed		:	isSubscribed,
 						}
-						else if(user.pass!=pass)
-						{
-							res.writeHead(200, {'Content-Type': 'text/event-stream'});
-							res.end("wrong_pass");
-						}
-						{
-							res.setHeader('Content-Type', 'application/json');								
-							var sub=
-							{
-								user				:	user,
-								isSubscribed		:	isSubscribed,
-							}
-							res.send(JSON.stringify(sub));
-						}
-					});
+					res.send(JSON.stringify(sub));
 				}
 			});
 		}

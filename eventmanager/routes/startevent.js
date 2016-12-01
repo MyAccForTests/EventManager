@@ -112,7 +112,7 @@ router.post('/checkpass', function(req, res) {
 			else
 			{
 				res.setHeader('Content-Type', 'application/json');								
-				res.send();
+				res.send(false);
 			}
 		}
 	});
