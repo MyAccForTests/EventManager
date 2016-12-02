@@ -2,79 +2,33 @@
 var express = require('express');
 var router = express.Router();
 var path = require('path');
-var generatePassword = require('password-generator');
 
-router.get('/*', function(req, res) {
-	var lnk = req.originalUrl;
-	DBConnection.getEventByLink(lnk, function(ev)								
+router.get('/', function(req, res) {
+	if (req.session.result) {
+		res.sendFile(path.resolve(__dirname + '/../public/views/ownerpage.html'));
+		console.log("OwnerPage page sended");
+	}
+	else
 	{
-		if(ev=="db_error")
-		{
-			res.status(500).send('Server problem, try again later!');
-		}
-		else if(lnk!="/"+ev.ownlnk)
-		{
-			res.status(404).send();
-		}
-		else
-		{
-			res.render(__dirname + '/../public/views/ownerpagepass.ejs',
-			{
-				evID		:	ev.id,
-				userID		:	ev.owner.id,
-				email		:	ev.owner.email,
-			});
-			console.log("OwnerPassword page sended")
-		}
-	});
+		exit(res);
+	}
 });
 
-router.post('/newpass', function(req, res) {
-	var person=new Person("",req.body.email);
-	var pass=generatePassword(6, true);
-	person.pass=pass;
-	DBConnection.updatePersonPass(person, 
-	function(user){
-		if(user=="db_error")
-		{
-			res.status(500).send('Server problem, try again later!');
-		}
-		else
-		{
-			res.setHeader('Content-Type', 'application/json');								
-			res.send(JSON.stringify(true));
-			//emailSender.sendPassNotification(ev);											//send email new password
-		}
-	});
-});
-
-router.post('/login', function(req, res) {
-	var owner=new Person("","");
-	owner.id=req.body.userID;
-	var evID=req.body.evID;
-	var pass=req.body.pass;
-	DBConnection.getEventByID(evID, function(ev)								
+router.get('/exit', function(req, res) {
+	if (req.session.result) {
+		req.session.destroy(function(err) {
+			exit(res);
+		})
+	}
+	else
 	{
-		if(ev=="db_error")
-		{
-			res.status(500).send('Server problem, try again later!');
-		}
-		else if(owner.id!=ev.owner.id)
-		{
-			res.writeHead(200, {'Content-Type': 'text/event-stream'});								
-			res.end("wrong_data");
-		}
-		else if(pass!=ev.owner.pass)
-		{
-			res.writeHead(200, {'Content-Type': 'text/event-stream'});								
-			res.end("wrong_pass");
-		}
-		else
-		{
-			res.writeHead(200, {'Content-Type': 'text/event-stream'});						//send owner controls						
-			res.end("Success");
-		}
-	});
+		exit(res);
+	}
 });
+
+var exit = function(res)
+{
+	res.redirect(servSettings.server.address);
+}
 
 module.exports = router;

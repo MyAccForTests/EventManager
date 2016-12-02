@@ -35,10 +35,9 @@ var login= function()
 				$("#errMessage").prop("innerHTML","Wrong password");
 				$("#err").show();
 			}
-			else 
+			else
 			{
-				$("#errMessage").prop("innerHTML","Success");
-				$("#err").show();
+				window.location.href=resp;
 			}
 		});
 		post.fail(function(resp)
