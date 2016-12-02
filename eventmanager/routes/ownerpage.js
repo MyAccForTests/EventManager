@@ -71,7 +71,7 @@ router.post('/login', function(req, res) {
 		}
 		else
 		{
-			res.writeHead(200, {'Content-Type': 'text/event-stream'});						
+			res.writeHead(200, {'Content-Type': 'text/event-stream'});						//send owner controls						
 			res.end("Success");
 		}
 	});
