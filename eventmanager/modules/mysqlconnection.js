@@ -453,6 +453,65 @@ var getEventByLink = function(lnk, res)
 	});
 }
 
+var getEventByID = function(id, res)
+{
+	pool.getConnection(function(err, connection) {
+		if(err) 
+		{
+			console.log('cannot estabilish connection for getEventByID()');
+			res("db_error");
+		} 
+		else
+		{
+			console.log('connected for getEventByID() as id '+connection.threadId);
+			connection.query('SELECT id, Title, Description, Owner, Capacity, Price, Date, Deadline, Link, OwnerLink, SubmitLink, Image FROM event WHERE id=?', [id],
+			function(err, results, fields)
+			{
+				if(err) 
+				{
+					console.log('query from getEventByID() unsuccessful');
+					connection.release();
+					console.log('connection released after bad query in getEventByID()');
+					res("db_error");
+				}
+				else
+				{
+					console.log('receivied for getEventByID() from base: '+results.length+' results')
+					if(results.length == 0)
+					{
+						var ev=new Event("", "", "", "", "", "", "", "", "", "", "", "");
+						res(ev);
+					}
+					else
+					{
+						var id = results[0].id;
+						var title= results[0].Title;
+						var description= results[0].Description;
+						var ownerId= results[0].Owner;
+						var capacity= results[0].Capacity;
+						var price= results[0].Price;
+						var date= new Date(results[0].Date);
+						var datereg= new Date(results[0].Deadline);
+						var lnk= results[0].Link;
+						var ownlnk= results[0].OwnerLink;
+						var sublnk= results[0].SubmitLink;
+						var img= results[0].Image;
+						getPersonById(ownerId, function(user)
+						{
+							var owner=user;
+							var ev=new Event(title, description, owner, capacity, price, date, datereg, ownlnk, lnk, sublnk, img);
+							ev.id=id;
+							res(ev);
+						});
+					}
+					connection.release();
+					console.log('connection released for getEventByLink()');
+				}
+			});
+		};
+	});
+}
+
 var getPersonById = function(id, res)
 {
 	pool.getConnection(function(err, connection) {
@@ -499,6 +558,8 @@ var getPersonById = function(id, res)
 		};
 	});
 }
+
+module.exports.getEventByID = getEventByID;
 module.exports.updatePersonPass = updatePersonPass;
 module.exports.checkUserSubscribsion = checkUserSubscribsion;
 module.exports.countFreeSpace = countFreeSpace;

@@ -10,6 +10,10 @@ router.get('/*', function(req, res) {
 		{
 			res.status(500).send('Server problem, try again later!');
 		}
+		else if(lnk!="/"+ev.sublnk)
+		{
+			res.status(404).send();
+		}
 		else
 		{
 			res.render(__dirname + '/../public/views/submitevent.ejs',

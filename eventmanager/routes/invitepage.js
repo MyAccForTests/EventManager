@@ -12,8 +12,14 @@ router.get('/*', function(req, res) {
 		{
 			res.status(500).send('Server problem, try again later!');
 		}
+		else if(lnk!="/"+ev.lnk)
+		{
+			res.status(404).send();
+		}
 		else
 		{
+			console.log(lnk);
+			console.log(ev.lnk);
 			var capC="Total space:";
 			var leftL="Left space:";
 			var leftS="0";
@@ -251,7 +257,7 @@ router.post('/email', function(req, res) {
 			{
 				var sub=
 						{
-							user				:	user,
+							user	:	user,
 						}
 				res.setHeader('Content-Type', 'application/json');								
 				res.send(JSON.stringify(sub));

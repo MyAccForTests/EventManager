@@ -12,3 +12,7 @@ input[readonly].rdonly {
 #qrcode>img{
     display: inline !important;
 }
+#mainRow
+{
+	margin-top:50px !important;
+}
