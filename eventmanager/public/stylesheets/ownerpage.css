@@ -2,3 +2,11 @@ body, html, .container-fluid
 {
     height: 100%; 
 }
+#mainRow
+{
+	margin-top:50px !important;
+}
+#err
+{
+	display:none;
+}

@@ -5,28 +5,35 @@ var path = require('path');
 var generatePassword = require('password-generator');
 
 router.get('/*', function(req, res) {
-	var lnk = req.originalUrl;
-	DBConnection.getEventByLink(lnk, function(ev)								
+	if(req.session.data)
 	{
-		if(ev=="db_error")
+		res.redirect("/ownerpage");
+	}
+	else
+	{
+		var lnk = req.originalUrl;
+		DBConnection.getEventByLink(lnk, function(ev)								
 		{
-			res.status(500).send('Server problem, try again later!');
-		}
-		else if(lnk!="/"+ev.ownlnk)
-		{
-			res.status(404).send();
-		}
-		else
-		{
-			res.render(__dirname + '/../public/views/ownerpagepass.ejs',
+			if(ev=="db_error")
 			{
-				evID		:	ev.id,
-				userID		:	ev.owner.id,
-				email		:	ev.owner.email,
-			});
-			console.log("OwnerPagePassword page sended")
-		}
-	});
+				res.status(500).send('Server problem, try again later!');
+			}
+			else if(lnk!="/"+ev.ownlnk)
+			{
+				res.status(404).send();
+			}
+			else
+			{
+				res.render(__dirname + '/../public/views/ownerpagepass.ejs',
+				{
+					evID		:	ev.id,
+					userID		:	ev.owner.id,
+					email		:	ev.owner.email,
+				});
+				console.log("OwnerPagePassword page sended")
+			}
+		});
+	}
 });
 
 router.post('/newpass', function(req, res) {
@@ -71,7 +78,7 @@ router.post('/login', function(req, res) {
 		}
 		else
 		{
-			req.session.result=
+			req.session.data=
 			{
 				evID	:	evID,
 				userID	:	owner.id
