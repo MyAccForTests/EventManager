@@ -29,17 +29,18 @@
 					<input type="text" id="email" name="email" placeholder="Email" class="form-control" maxlength="50" autocomplete="false" disabled value="<%= email %>">
 					<br>
 					<input type="password" id="pass" name="pass" placeholder="Password" class="form-control" maxlength="50" autocomplete="false" required>
-					<br>
-					<button type="submit" id="submit" class="btn btn-primary btn-block">Continue</button>
 					<a href onclick="return false">
 						<span onclick="newPassword()" id="passNew">Send new password</span>
 					</a>
+					<br><br>
+					<div class="alert alert-danger" role="alert" id="err">
+						<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+						<span class="sr-only">Error:</span>
+						<span id="errMessage"></span>
+					</div>
+					<button type="submit" id="submit" class="btn btn-primary btn-block">Continue</button>
 				</form>
-				<div class="alert alert-danger" role="alert" id="err">
-					<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-					<span class="sr-only">Error:</span>
-					<span id="errMessage"></span>
-				</div>
+				
 			</div>
 		</div>
 	</div>

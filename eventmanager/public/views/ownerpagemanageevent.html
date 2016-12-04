@@ -1,93 +1,92 @@
-
-	<div class="row" ng-controller="manageEventController">
-	<div class="col-md-12">
-	<form method="POST" id="eventForm" enctype="multipart/form-data">
-		<div class="form-group">
-			<label for="title">
-				Event title:
-			</label>
-			<input type="text" id="title" name="title" placeholder="Name for event, required" class="form-control" maxlength="50" autocomplete="false" required value="{{title}}">
-		</div>
-		<div class="form-group">
-			<label for="description" >
-				Full event description:
-			</label>
-			<textarea rows="8" oninput="symbCount()" id="description" name="description" placeholder="Up to 5000 symbols, required" class="form-control" maxlength="5000" autocomplete="false" required>{{description}}</textarea>
-			<p id="leftSym" class="text-right text-info small"></p>
-		</div>
-		<div class="form-group form-inline">
-			<div class="row">
-				<div class="col-md-6">
-					<label for="email">
-						Your E-mail:
-					</label><br>
-					<input type="email" id="email" onblur="checkNameInBase()" name="email" placeholder="Email" class="form-control" maxlength="50" required disabled value="{{email}}">
-				</div>
-				<div class="col-md-6">
-					<label for="name">
-						Your name:
-					</label><br>
-					<input type="text" id="name" name="name" placeholder="Name, required" class="form-control" maxlength="50" autocomplete="false" required value="{{name}}">
-				</div>
-			</div>
-		</div>
-		<div class="row" id="err">
-			<div class="col-md-12">
-				<div class="alert alert-danger" role="alert">
-					<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-					<span class="sr-only">Error:</span>
-					<span id="errMessage"></span>
-				</div>
-			</div>
-		</div>
-		<div class="form-group form-inline">
-			<div class="row">
-				<div class="col-md-6">
-					<label for="date">
-						Event date:
-					</label><br>
-					<input type="datetime-local" onchange="regDateSet()" id="date" name="date" class="form-control"  min="1899-01-01T00:00:00" max="2200-13-13T23:59:59" autocomplete="false" required value="{{date}}">
-				</div>
-				<div class="col-md-6">
-					<label for="datereg">
-						Last registration date:
-					</label><br>
-					<input type="datetime-local" id="datereg" name="datereg" class="form-control" min="1899-01-01T00:00:00" max="2200-13-13T23:59:59" autocomplete="false" required value="{{datereg}}">
-				</div>
-			</div>
-		</div>
-		<div class="form-group form-inline">
-			<div class="row">
-				<div class="col-md-6">
-					<label for="capacity">
-						Event capacity:
-					</label><br>
-					<input type="number" id="capacity" name="capacity" min="0" step="1" placeholder="Max number of guests" class="form-control" min="0" autocomplete="false" max="1000000000" value="{{capacity}}">
-				</div>
-				<div class="col-md-6">
-					<label for="price">
-						Event price:
-					</label><br>
-					<input type="number" min="0.00" step="0.01" id="price" name="price" placeholder="0.00" class="form-control" min="0" autocomplete="false" max="1000000000" value="{{price}}">
-				</div>
-			</div>
-		</div>
-		<div class="form-group form-inline">
-			<div class="row">
-						<div class="col-md-6">
-							<div id="imageContainer">
-								<img src="{{img}}" alt="error loading image" class="img img-responsive" id="image">
-							</div>
-						</div>
-						<div class="col-md-6">
-							<label for="img">
-								Choose other image(old image will be deleted):
-							</label>
-							<input type="file" id="img" name="img" accept="image/*">
-						</div>
-			</div>
-			<br>
-		<button type="submit" class="btn btn-primary btn-block">Modify Event</button>
-	</form>
+<div class="row" ng-controller="manageEventController">
+<div class="col-md-12">
+<form method="POST" id="eventForm" enctype="multipart/form-data" ng-submit="modify()">
+	<div class="form-group">
+		<label for="title">
+			Event title:
+		</label>
+		<input type="text" id="title" name="title" placeholder="Name for event, required" class="form-control" maxlength="50" autocomplete="false" required ng-value="title">
 	</div>
+	<div class="form-group">
+		<label for="description" >
+			Full event description:
+		</label>
+		<textarea rows="8" oninput="symbCount()" id="description" name="description" placeholder="Up to 5000 symbols, required" class="form-control" maxlength="5000" autocomplete="false" required>{{description}}</textarea>
+		<p id="leftSym" class="text-right text-info small"></p>
 	</div>
+	<div class="form-group form-inline">
+		<div class="row">
+			<div class="col-md-6">
+				<label for="email">
+					Your E-mail:
+				</label><br>
+				<input type="email" id="email" onblur="checkNameInBase()" name="email" placeholder="Email" class="form-control" maxlength="50" required disabled ng-value="email">
+			</div>
+			<div class="col-md-6">
+				<label for="name">
+					Your name:
+				</label><br>
+				<input type="text" id="name" name="name" placeholder="Name, required" class="form-control" maxlength="50" autocomplete="false" required ng-value="name">
+			</div>
+		</div>
+	</div>
+	<div class="row" id="err">
+		<div class="col-md-12">
+			<div class="alert alert-danger" role="alert">
+				<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+				<span class="sr-only">Error:</span>
+				<span id="errMessage"></span>
+			</div>
+		</div>
+	</div>
+	<div class="form-group form-inline">
+		<div class="row">
+			<div class="col-md-6">
+				<label for="date">
+					Event date:
+				</label><br>
+				<input type="datetime-local" onchange="regDateSet()" id="date" name="date" class="form-control"  min="1899-01-01T00:00:00" max="2200-13-13T23:59:59" autocomplete="false" required ng-value="date">
+			</div>
+			<div class="col-md-6">
+				<label for="datereg">
+					Last registration date:
+				</label><br>
+				<input type="datetime-local" id="datereg" name="datereg" class="form-control" min="1899-01-01T00:00:00" max="2200-13-13T23:59:59" autocomplete="false" required ng-value="datereg">
+			</div>
+		</div>
+	</div>
+	<div class="form-group form-inline">
+		<div class="row">
+			<div class="col-md-6">
+				<label for="capacity">
+					Event capacity:
+				</label><br>
+				<input type="number" id="capacity" name="capacity" min="0" step="1" placeholder="Max number of guests" class="form-control" min="0" autocomplete="false" max="1000000000" ng-value="capacity">
+			</div>
+			<div class="col-md-6">
+				<label for="price">
+					Event price:
+				</label><br>
+				<input type="number" min="0.00" step="0.01" id="price" name="price" placeholder="0.00" class="form-control" min="0" autocomplete="false" max="1000000000" ng-value="price">
+			</div>
+		</div>
+	</div>
+	<div class="form-group form-inline">
+		<div class="row">
+			<div class="col-md-6">
+				<div id="imageContainer">
+					<img src="{{img}}" alt="error loading image" class="img img-responsive" id="image">
+				</div>
+			</div>
+			<div class="col-md-6">
+				<label for="img">
+					Choose other image(old image will be deleted):
+				</label>
+				<input type="file" id="img" name="img" accept="image/*">
+			</div>
+		</div>
+		<br>
+	<button type="submit" id="submit" class="btn btn-primary btn-block">Modify Event</button>
+</form>
+</div>
+</div>

@@ -19,19 +19,19 @@ $(window).on("load",function()
 	$("#eventForm").attr("action",servAdress+"/create");
 	$('#eventForm').submit(prepare);
 });
-function regDateSet()
+var regDateSet=function()
 {
 	var evDate=$("#date").val();
 	$("#datereg").attr("max", evDate);
 }
-function symbCount()
+var symbCount=function()
 {
 	var maxL=$("#description").attr("maxlength");
 	var curL=$("#description").val().length;
 	var symLeft=maxL-curL;
 	$("#leftSym").text(symLeft+"/"+maxL);
 }
-function checkNameInBase()
+var checkNameInBase=function()
 {
 	$("#err").hide();
 	$(".pass").hide();
