@@ -1,74 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
-    <title>Event Manager</title>
-	<!-- JQuery -->
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-	<!-- Anjular -->
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-route.js"></script>
-    <!-- Bootstrap -->
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	<!-- Latest compiled and minified JavaScript -->
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-	<!--        -->
-	<script type="text/javascript" src="../javascripts/settings.js"></script>
-	<script type="text/javascript" src="../javascripts/ownerpage.js"></script>
-	<link type="text/css" rel="stylesheet" href="../stylesheets/ownerpage.css">
-</head>
-<body>
-<div class="container-fluid" ng-app="ownerpage">
-	<div class="row" id="mainRow">
-	<div class="col-md-2"></div>
-	<div class="col-md-8">
-		<div class="panel panel-primary">
-			<div class="panel-heading">
-				<h3 class="panel-title">Manage form:</h3>
-			</div>
-			<div class="panel-body">
-					<div class="row">
-						<div class="col-md-8"></div>
-						<div class="col-md-4">
-								<button id="exit" class="btn btn-primary btn-block">Exit</button>
-						</div>
-					</div>
-					
-					<div class="row">
-						<div class="col-md-12" ng-controller="nameController">
-							<h2>{{name}}</h2>
-						</div>
-					</div>
-					<div class="row" id="err">
-						<div class="col-md-12">
-							<div class="alert alert-danger" role="alert">
-								<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-								<span class="sr-only">Error:</span>
-								<span id="errMessage"></span>
-							</div>
-						</div>
-					</div>
-				<div class="page-header">
-				</div>
-				<div class="row">
-					<div class="col-md-12">
-						<ul class="nav nav-pills" id="mainPills">
-						  <li role="presentation" class="active" id="subscribers"><a href="#subscribers">Subscribers list</a></li>
-						  <li role="presentation" id="manageEvent"><a href="#manageevent">Manage event</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-12">
-					/*Place for Angular templates*/
-					</div>
-				</div>
-			</div>
+<div class="row" id="mainRow">
+	<div class="col-md-12">
+	<div class="table-responsive">
+		<table class="table table-hover table-condensed">
+			<thead>
+				<tr>
+					<th>Email</th>
+					<th>Name</th>
+					<th>Action</th>
+				</tr>
+			</thead>
+			<tbody>
+			<tr class="trUser">
+				<td class="tdEmail">Email</td>
+				<td	class="tdUser">User</td>
+				<td class="tdUnsub"><button id="unsub" class="btn btn-primary btn-block">Unsubscribe</button></td>
+			</tr>
+			<tr class="trUser">
+				<td class="tdEmail">Email</td>
+				<td	class="tdUser">User</td>
+				<td class="tdUnsub"><button id="unsub" class="btn btn-primary btn-block">Unsubscribe</button></td>
+			</tr>
+			</tbody>
+		</table>
 		</div>
 	</div>
-	<div class="col-md-2"></div>
-	</div>
 </div>
-</body>
-</html>

@@ -39,6 +39,8 @@ app.use('/i', invitePage);
 app.use('/o', ownerPagePass);
 app.use('/s', submitPage);
 app.use('/ownerpage', ownerPage);
+app.use('/manageevent', ownerPage);
+app.use('/subscribers', ownerPage);
 /*-----------------------------------------*/
 app.listen(port, function(){console.log('server started at port:'+port);});
 

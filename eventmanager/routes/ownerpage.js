@@ -55,6 +55,39 @@ router.get('/name', function(req, res) {
 	}
 });
 
+router.post('/getevent', function(req, res) {
+	if (req.session.data) 
+	{
+		DBConnection.getEventByID(req.session.data.evID,function(ev){
+				if(ev=="db_error")
+				{
+					res.status(500).send('Server problem, try again later!');
+				}
+				else
+				{
+					var sub=
+					{
+						title		:	ev.title,
+						description	:	ev.description,
+						email		:	ev.owner.email,
+						name		:	ev.owner.name,
+						date		:	ev.date,
+						datereg		:	ev.datereg,
+						img			:	ev.img,
+						price		:	ev.price,
+						capacity	:	ev.capacity
+					}
+					
+					res.send(sub);
+				}
+		});
+	}
+	else
+	{
+		exit(res);
+	}
+});
+
 var exit = function(res)
 {
 	res.redirect(servSettings.server.address);

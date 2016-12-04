@@ -10,3 +10,15 @@ body, html, .container-fluid
 {
 	display:none;
 }
+#email, #name, #date, #datereg, #capacity, #price, #pass
+{
+	width:100%;
+}
+.tdUnsub
+{
+	width:10%;
+}
+.tdEmail, .tdName
+{
+	width:45%;
+}

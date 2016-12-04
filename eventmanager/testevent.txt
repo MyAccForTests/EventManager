@@ -12,3 +12,7 @@ http://localhost:6560/s/2Oz_RlA71480413880829
 http://localhost:6560/i/xqQFPBXZ1480413880827
 http://localhost:6560/o/mKEVGYGw1480413880828
 blade331@gmail.com - fipisi
+
+todo
+//update event - client + server side (manageEventController)
+//subscribers list - all (subscribersController)

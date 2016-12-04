@@ -30,7 +30,7 @@ router.get('/*', function(req, res) {
 			}
 			else 
 			{
-				ev.img="../"+ev.img.replace('\public','/').replace("\\",'/')
+				ev.img="../"+ev.img.replace('\public','/').replace("\\",'/');
 			}
 			if(ev.capacity==null)
 			{
