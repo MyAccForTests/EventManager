@@ -2,6 +2,17 @@
 var express = require('express');
 var router = express.Router();
 var path = require('path');
+var generatePassword = require('password-generator');
+var multer  = require('multer');
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './public/userimages/')
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now()+generatePassword(5,false)+file.originalname.slice(file.originalname.lastIndexOf(".",file.originalname.length)))
+  }
+});
+var upload = multer({ storage: storage });
 
 router.get('/', function(req, res) {
 	if (req.session.data) {
@@ -90,6 +101,9 @@ router.post('/getevent', function(req, res) {
 router.post('/updateevent', function(req, res) {
 	if (req.session.data) 
 	{
+		console.log(req.files);
+		console.log(req.body);
+		/*
 		var person=new Person(req.body.name, req.body.email);
 		person.id=req.session.userID;
 		var ev=new Event(req.body.title, req.body.description, person, req.body.capacity, req.body.price, new Date(req.body.date).toISOString().slice(0, 19), new Date(req.body.datereg).toISOString().slice(0, 19), "", "", "", req.body.img);
@@ -125,6 +139,7 @@ router.post('/updateevent', function(req, res) {
 				});
 			}
 		});
+	*/
 	}
 	else
 	{

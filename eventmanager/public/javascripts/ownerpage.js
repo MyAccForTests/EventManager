@@ -60,11 +60,31 @@ app.controller("manageEventController",['$scope', '$http',function($scope, $http
 		regDateSet();
 		$scope.modify=function()
 		{
+			
+			console.log(document.getElementById('imgload').files[0]);
+			var fd = new FormData();
+			fd.append('file', document.getElementById('imgload').files[0]);
+			console.log(fd);
+			$http.post(
+				servAdress+"/updateevent", 
+				fd, 
+				{
+					transformRequest: angular.identity,
+					headers: {'Content-Type': undefined}
+				})
+				.success(function(){
+				})
+				.error(function(){
+				});
+		
+			/*
+			console.log(document.getElementById('img').files[0]);
 			$("#err").hide();
 			var scdesc=$scope.ev.description.replace(new RegExp('\n', 'g'), '<br>');
 			$http({
 				method : "POST",
 				url : servAdress+"/updateevent",
+				headers: {'Content-Type': 'multipart/form-data'},
 				data :	{
 							title		:	$scope.ev.title==response.data.title?"":$scope.ev.title,
 							description	:	scdesc==response.data.description?"":scdesc,
@@ -73,8 +93,9 @@ app.controller("manageEventController",['$scope', '$http',function($scope, $http
 							date		:	$scope.ev.date.toISOString(),
 							datereg		:	$scope.ev.datereg.toISOString(),
 							capacity	:	$scope.ev.capacity==response.data.capacity?"":$scope.ev.capacity,
-							price		:	$scope.ev.price==response.data.price?"":$scope.ev.price
-						}	
+							price		:	$scope.ev.price==response.data.price?"":$scope.ev.price,
+							upload		:	document.getElementById('img').files[0]
+						}
 			})
 			.then (function(response) 
 			{
@@ -86,6 +107,7 @@ app.controller("manageEventController",['$scope', '$http',function($scope, $http
 				$("#errMessage").prop("innerHTML","Server error, try again later!");
 				$("#err").show();
 			});
+			*/
 		}
 	},
 	function(err) {
