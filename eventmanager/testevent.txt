@@ -16,3 +16,4 @@ blade331@gmail.com - fipisi
 todo
 //update event - client + server side (manageEventController)
 //subscribers list - all (subscribersController)
+//check max users vs new max users

@@ -76,7 +76,7 @@
 			<div class="col-md-3"></div>
 			<div class="col-md-6" id="imgCol">
 				<div id="imageContainer">
-					<img src="{{ev.img}}" alt="error loading image" class="img img-responsive center-block" id="image">
+					<img ng-src="{{ev.img}}" ng-model="ev.img" alt="error loading image" class="img img-responsive center-block" id="image">
 				</div>
 				<label for="img">
 					Choose other image(old image will be deleted):

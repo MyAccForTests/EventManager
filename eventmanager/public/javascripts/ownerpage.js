@@ -60,32 +60,10 @@ app.controller("manageEventController",['$scope', '$http',function($scope, $http
 		regDateSet();
 		$scope.modify=function()
 		{
-			
-			console.log(document.getElementById('imgload').files[0]);
-			var fd = new FormData();
-			fd.append('file', document.getElementById('imgload').files[0]);
-			console.log(fd);
-			$http.post(
-				servAdress+"/updateevent", 
-				fd, 
-				{
-					transformRequest: angular.identity,
-					headers: {'Content-Type': undefined}
-				})
-				.success(function(){
-				})
-				.error(function(){
-				});
-		
-			/*
-			console.log(document.getElementById('img').files[0]);
 			$("#err").hide();
+			var formData = new FormData();
 			var scdesc=$scope.ev.description.replace(new RegExp('\n', 'g'), '<br>');
-			$http({
-				method : "POST",
-				url : servAdress+"/updateevent",
-				headers: {'Content-Type': 'multipart/form-data'},
-				data :	{
+			var data =	{
 							title		:	$scope.ev.title==response.data.title?"":$scope.ev.title,
 							description	:	scdesc==response.data.description?"":scdesc,
 							name		:	$scope.ev.name==response.data.name?"":$scope.ev.name,
@@ -94,20 +72,41 @@ app.controller("manageEventController",['$scope', '$http',function($scope, $http
 							datereg		:	$scope.ev.datereg.toISOString(),
 							capacity	:	$scope.ev.capacity==response.data.capacity?"":$scope.ev.capacity,
 							price		:	$scope.ev.price==response.data.price?"":$scope.ev.price,
-							upload		:	document.getElementById('img').files[0]
 						}
-			})
-			.then (function(response) 
+			var img=$('#imgload')[0].files[0];
+			if(img!==undefined)
 			{
-				parseEvent($scope, response);
-				$("#errMessage").prop("innerHTML","Successfully updated!");
-				$("#err").show();
-			},
-			function(err){
+				formData.append('file', img);
+			}
+			formData.append('data', JSON.stringify(data));
+			var post=$.ajax({
+				url: servAdress+"/updateevent",
+				data: formData,
+				type: 'POST',
+				contentType: false,
+				processData: false
+			})
+			post.done(function(response)
+			{
+				if(response=="capacity_limit")
+				{
+					$("#errMessage").prop("innerHTML","Unable to update, capacity reached, first unsubscribe users");
+					$("#err").show();
+				}
+				else
+				{
+					response.data=response;
+					parseEvent($scope, response);
+					$scope.$apply();
+					$("#errMessage").prop("innerHTML","Successfully updated!");
+					$("#err").show();
+				}
+			});
+			post.fail(function(response)
+			{
 				$("#errMessage").prop("innerHTML","Server error, try again later!");
 				$("#err").show();
 			});
-			*/
 		}
 	},
 	function(err) {
@@ -118,7 +117,6 @@ app.controller("manageEventController",['$scope', '$http',function($scope, $http
 
 app.controller("subscribersController",['$scope', '$http',function($scope, $http) {
 	checkClicked();
-	
 }]);
 
 var exit = function()

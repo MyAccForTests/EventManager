@@ -584,40 +584,54 @@ var updateEvent = function(ev, res)
 				} 
 				else
 				{
-					if(ev.owner.name!="")
+					if(/*ev.capacity<eve.capacity && ev.capacity!=null && eve.capacity!=null*/false)																	//todo subscribers count check
 					{
-						updatePersonName(ev.owner,function(result){
-							if(result=="db_error")
+						console.log(ev.capacity<eve.capacity)
+						console.log(ev.capacity!="")
+						console.log(eve.capacity!=null)
+						console.log(ev.capacity)
+						console.log(eve.capacity)
+						res("capacity_limit");
+						connection.release();
+					}
+					else
+					{
+						if(ev.owner.name!="")
+						{
+							updatePersonName(ev.owner,function(result){
+								if(result=="db_error")
+								{
+									res("db_error");
+								}
+							});
+						}
+						ev.title=ev.title==""?eve.title:ev.title;
+						ev.description=ev.description==""?eve.description:ev.description;
+						ev.capacity=ev.capacity==""?eve.capacity:ev.capacity;
+						ev.price=ev.price==""?eve.price:ev.price;
+						ev.img=ev.img==""?eve.img:ev.img;
+						console.log('connected for updateEvent() as id '+connection.threadId);
+						connection.query('UPDATE event SET Title=?, Description=?, Capacity=?, Price=?, Date=?, Deadline=?, Image=? WHERE id=?', 
+						[[ev.title],[ev.description],[ev.capacity],[ev.price],[ev.date],[ev.datereg],[ev.img],[ev.id]],
+						function(err, result)
+						{
+							if(err) 
 							{
+								console.log('query from updateEvent() unsuccessful');
+								connection.release();
+								console.log('connection released after bad query in updateEvent()');
 								res("db_error");
+							}
+							else
+							{
+								console.log('putting to db for updateEvent() successful')
+								connection.release();
+								console.log('connection released for updateEvent()');
+								result.oldimg=eve.img;
+								res(result);
 							}
 						});
 					}
-					ev.title=ev.title==""?eve.title:ev.title;
-					ev.description=ev.description==""?eve.description:ev.description;
-					ev.capacity=ev.capacity==""?eve.capacity:ev.capacity;
-					ev.price=ev.price==""?eve.price:ev.price;
-					ev.img=ev.img==""?eve.img:ev.img;
-					console.log('connected for updateEvent() as id '+connection.threadId);
-					connection.query('UPDATE event SET Title=?, Description=?, Capacity=?, Price=?, Date=?, Deadline=?, Image=? WHERE id=?', 
-					[[ev.title],[ev.description],[ev.capacity],[ev.price],[ev.date],[ev.datereg],[ev.img],[ev.id]],
-					function(err, result)
-					{
-						if(err) 
-						{
-							console.log('query from updateEvent() unsuccessful');
-							connection.release();
-							console.log('connection released after bad query in updateEvent()');
-							res("db_error");
-						}
-						else
-						{
-							console.log('putting to db for updateEvent() successful')
-							connection.release();
-							console.log('connection released for updateEvent()');
-							res(result);
-						}
-					});
 				}
 			});
 		}
