@@ -59,27 +59,26 @@ router.post('/getevent', function(req, res) {
 	if (req.session.data) 
 	{
 		DBConnection.getEventByID(req.session.data.evID,function(ev){
-				if(ev=="db_error")
+			if(ev=="db_error")
+			{
+				res.status(500).send('Server problem, try again later!');
+			}
+			else
+			{
+				var sub=
 				{
-					res.status(500).send('Server problem, try again later!');
-				}
-				else
-				{
-					var sub=
-					{
-						title		:	ev.title,
-						description	:	ev.description,
-						email		:	ev.owner.email,
-						name		:	ev.owner.name,
-						date		:	ev.date,
-						datereg		:	ev.datereg,
-						img			:	ev.img,
-						price		:	ev.price,
-						capacity	:	ev.capacity
-					}
-					
-					res.send(sub);
-				}
+					title		:	ev.title,
+					description	:	ev.description,
+					email		:	ev.owner.email,
+					name		:	ev.owner.name,
+					date		:	ev.date,
+					datereg		:	ev.datereg,
+					img			:	ev.img,
+					price		:	ev.price,
+					capacity	:	ev.capacity
+				}	
+				res.send(sub);
+			}
 		});
 	}
 	else
@@ -91,32 +90,41 @@ router.post('/getevent', function(req, res) {
 router.post('/updateevent', function(req, res) {
 	if (req.session.data) 
 	{
-		console.log(req.body)
-		/*
-		DBConnection.getEventByID(req.session.data.evID,function(ev){
-				if(ev=="db_error")
-				{
-					res.status(500).send('Server problem, try again later!');
-				}
-				else
-				{
-					var sub=
+		var person=new Person(req.body.name, req.body.email);
+		person.id=req.session.userID;
+		var ev=new Event(req.body.title, req.body.description, person, req.body.capacity, req.body.price, new Date(req.body.date).toISOString().slice(0, 19), new Date(req.body.datereg).toISOString().slice(0, 19), "", "", "", req.body.img);
+		ev.id=req.session.data.evID;
+		DBConnection.updateEvent(ev,function(ev){
+			if(ev=="db_error")
+			{
+				res.status(500).send('Server problem, try again later!');
+			}
+			else
+			{
+				DBConnection.getEventByID(req.session.data.evID,function(ev){
+					if(ev=="db_error")
 					{
-						title		:	ev.title,
-						description	:	ev.description,
-						email		:	ev.owner.email,
-						name		:	ev.owner.name,
-						date		:	ev.date,
-						datereg		:	ev.datereg,
-						img			:	ev.img,
-						price		:	ev.price,
-						capacity	:	ev.capacity
+						res.status(500).send('Server problem, try again later!');
 					}
-					
-					res.send(sub);
-				}
+					else
+					{
+						var sub=
+						{
+							title		:	ev.title,
+							description	:	ev.description,
+							email		:	ev.owner.email,
+							name		:	ev.owner.name,
+							date		:	ev.date,
+							datereg		:	ev.datereg,
+							img			:	ev.img,
+							price		:	ev.price,
+							capacity	:	ev.capacity
+						}	
+						res.send(sub);
+					}
+				});
+			}
 		});
-		*/
 	}
 	else
 	{

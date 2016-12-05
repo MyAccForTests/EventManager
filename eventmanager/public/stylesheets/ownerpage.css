@@ -26,3 +26,10 @@ body, html, .container-fluid
 {
 	resize: none;
 }
+#imgCol
+{
+	text-align:center;
+}
+input[type=file] {
+    margin: 0 auto;
+}

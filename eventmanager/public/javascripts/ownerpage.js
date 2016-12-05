@@ -48,90 +48,45 @@ app.controller("manageEventController",['$scope', '$http',function($scope, $http
 	$("#date").attr("max", max.toISOString().slice(0,16));
 	$("#datereg").attr("min", min.toISOString().slice(0,16));
 	$("#datereg").attr("max", max.toISOString().slice(0,16));
+	$scope.ev={};
 	$http({
 		method: "POST",
 		url: servAdress+"/getevent"
 	})
 	.then(function(response) {
 		$("#err").hide();
-		$scope.title=response.data.title;
-		$scope.description=response.data.description.replace(new RegExp('<br>', 'g'), '\n');
-		$scope.email=response.data.email;
-		$scope.name=response.data.name;
-		$scope.date=response.data.date.substring(0,response.data.date.length-5);
-		$scope.datereg=response.data.date.substring(0,response.data.date.length-5);
-		$scope.modify=function()
-		{
-			console.log("rr");
-		/*	
-			$("#err").hide();
-				var data = 
-					{
-						url : servAdress+"/unsub",
-						method : "POST",
-						data :	{
-									userID		:	userID,
-									evID	 	: 	evID,
-									pass		:	$("#pass").val()
-								}
-					}
-				var post = $.ajax(data);
-				post.done(function(resp)
-						{
-						if(resp=="wrong_pass")
-							{
-								$("#errMessage").prop("innerHTML","Wrong password");
-								$("#err").show();
-							}
-							else
-							{
-								$("#submit").unbind("click",unsub);
-								$("#submit").on("click",participate);
-								$("#submit").prop("innerHTML","Participate");
-								$("#email").hide();
-								$("#name").hide();
-								$("#err").hide();
-								$("#email").prop("readonly",false);
-								setFreeSpace();
-								userID="";
-								$("#pass").hide();
-								$("#pass").val("");
-								Cookies.remove('ck', { path: window.location.pathname });
-							}	
-						});
-				post.fail(function(resp)
-					{
-						$("#errMessage").prop("innerHTML","Server error, try again later!");
-						$("#err").show();
-					});	
-		*/
-		}
-		if(response.data.img==null)
-		{
-			$scope.img='../images/eventInviteImagePlaceholder.png';
-		}
-		else
-		{
-			$scope.img="../"+response.data.img.replace('\public','/').replace("\\",'/');
-		}
-		if(response.data.capacity==null)
-		{
-			$scope.capacity='';
-		}
-		else
-		{
-			$scope.capacity=response.data.capacity;
-		}
-		if(response.data.price==null)
-		{
-			$scope.price=response.data.price;
-		}
-		else
-		{
-			$scope.price=response.data.price;
-		}
+		parseEvent($scope, response);
 		symbCount();
 		regDateSet();
+		$scope.modify=function()
+		{
+			$("#err").hide();
+			var scdesc=$scope.ev.description.replace(new RegExp('\n', 'g'), '<br>');
+			$http({
+				method : "POST",
+				url : servAdress+"/updateevent",
+				data :	{
+							title		:	$scope.ev.title==response.data.title?"":$scope.ev.title,
+							description	:	scdesc==response.data.description?"":scdesc,
+							name		:	$scope.ev.name==response.data.name?"":$scope.ev.name,
+							email		:	$scope.ev.email,
+							date		:	$scope.ev.date.toISOString(),
+							datereg		:	$scope.ev.datereg.toISOString(),
+							capacity	:	$scope.ev.capacity==response.data.capacity?"":$scope.ev.capacity,
+							price		:	$scope.ev.price==response.data.price?"":$scope.ev.price
+						}	
+			})
+			.then (function(response) 
+			{
+				parseEvent($scope, response);
+				$("#errMessage").prop("innerHTML","Successfully updated!");
+				$("#err").show();
+			},
+			function(err){
+				$("#errMessage").prop("innerHTML","Server error, try again later!");
+				$("#err").show();
+			});
+		}
 	},
 	function(err) {
 		$("#errMessage").prop("innerHTML","Server error, try again later!");
@@ -187,4 +142,17 @@ var regDateSet=function()
 {
 	var evDate=$("#date").val();
 	$("#datereg").attr("max", evDate);
+}
+
+var parseEvent=function($scope, response)
+{
+	$scope.ev.title=response.data.title;
+	$scope.ev.description=response.data.description.replace(new RegExp('<br>', 'g'), '\n');
+	$scope.ev.email=response.data.email;
+	$scope.ev.name=response.data.name;
+	$scope.ev.date=new Date(response.data.date);
+	$scope.ev.datereg=new Date(response.data.datereg);
+	$scope.ev.img=response.data.img==null?"../images/eventInviteImagePlaceholder.png":"../"+response.data.img.replace('\public','/').replace('\\','/');
+	$scope.ev.capacity=response.data.capacity==null?"":response.data.capacity;
+	$scope.ev.price=response.data.price==null?"":response.data.price;
 }

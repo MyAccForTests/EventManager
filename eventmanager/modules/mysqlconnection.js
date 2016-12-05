@@ -498,10 +498,17 @@ var getEventByID = function(id, res)
 						var img= results[0].Image;
 						getPersonById(ownerId, function(user)
 						{
-							var owner=user;
-							var ev=new Event(title, description, owner, capacity, price, date, datereg, ownlnk, lnk, sublnk, img);
-							ev.id=id;
-							res(ev);
+							if(user=="db_error")
+							{
+								res(user);
+							}
+							else
+							{
+								var owner=user;
+								var ev=new Event(title, description, owner, capacity, price, date, datereg, ownlnk, lnk, sublnk, img);
+								ev.id=id;
+								res(ev);
+							}
 						});
 					}
 					connection.release();
@@ -559,6 +566,66 @@ var getPersonById = function(id, res)
 	});
 }
 
+var updateEvent = function(ev, res)
+{
+	getEventByID(ev.id,function(eve){
+		if(eve=="db_error")
+		{
+			res(eve);
+		}
+		else
+		{
+			pool.getConnection(function(err, connection) {
+				if(err) 
+				{
+					console.log('cannot estabilish connection for updateEvent()');
+					connection.release();
+					res("db_error");
+				} 
+				else
+				{
+					if(ev.owner.name!="")
+					{
+						updatePersonName(ev.owner,function(result){
+							if(result=="db_error")
+							{
+								res("db_error");
+							}
+						});
+					}
+					ev.title=ev.title==""?eve.title:ev.title;
+					ev.description=ev.description==""?eve.description:ev.description;
+					ev.capacity=ev.capacity==""?eve.capacity:ev.capacity;
+					ev.price=ev.price==""?eve.price:ev.price;
+					ev.img=ev.img==""?eve.img:ev.img;
+					console.log('connected for updateEvent() as id '+connection.threadId);
+					connection.query('UPDATE event SET Title=?, Description=?, Capacity=?, Price=?, Date=?, Deadline=?, Image=? WHERE id=?', 
+					[[ev.title],[ev.description],[ev.capacity],[ev.price],[ev.date],[ev.datereg],[ev.img],[ev.id]],
+					function(err, result)
+					{
+						if(err) 
+						{
+							console.log('query from updateEvent() unsuccessful');
+							connection.release();
+							console.log('connection released after bad query in updateEvent()');
+							res("db_error");
+						}
+						else
+						{
+							console.log('putting to db for updateEvent() successful')
+							connection.release();
+							console.log('connection released for updateEvent()');
+							res(result);
+						}
+					});
+				}
+			});
+		}
+	});
+}
+
+
+module.exports.updateEvent = updateEvent;
 module.exports.getEventByID = getEventByID;
 module.exports.updatePersonPass = updatePersonPass;
 module.exports.checkUserSubscribsion = checkUserSubscribsion;
