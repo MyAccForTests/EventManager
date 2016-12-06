@@ -79,7 +79,7 @@ router.post('/newpass', function(req, res) {
 		{
 			res.setHeader('Content-Type', 'application/json');								
 			res.send(JSON.stringify(true));
-			//emailSender.sendPassNotification(ev);											//send email new password
+			emailSender.notifyNewPass(person);											
 		}
 	});
 });
@@ -132,8 +132,7 @@ router.post('/sub', function(req, res) {
 				{
 					userID=result.insertId;
 					eve.userID=userID;
-					//emailSender.sendPassNotification(ev);											//send email with password for new user
-					subsc(eve, res);
+					subsc(eve, res, person);
 				}	
 			});
 		}
@@ -160,13 +159,13 @@ router.post('/sub', function(req, res) {
 							}
 							else
 							{
-								subsc(eve, res);
+								subsc(eve, res, person);
 							}
 						});
 					}
 					else
 					{
-						subsc(eve, res);	
+						subsc(eve, res, person);	
 					}	
 				}					
 			});
@@ -177,7 +176,7 @@ router.post('/sub', function(req, res) {
 	
 
 
-var subsc = function(eve, res)
+var subsc = function(eve, res, person)
 {
 	var evID=eve.evID;
 	var userID=eve.userID;
@@ -200,7 +199,7 @@ var subsc = function(eve, res)
 							pass		:	eve.pass
 						}
 					res.end(JSON.stringify(sub));
-					//emailSender.sendPassNotification(ev);											//send email notification registration
+					emailSender.notifySubsc(person);
 					});
 				}
 				else
@@ -238,7 +237,7 @@ router.post('/unsub', function(req, res) {
 				{
 					res.writeHead(200, {'Content-Type': 'text/event-stream'});
 					res.end();																		
-					//emailSender.sendPassNotification(ev);											//send email unsubscribe
+					emailSender.notifyUnsubsc(user);		
 				}
 			});
 		}

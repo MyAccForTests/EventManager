@@ -15,11 +15,16 @@
 					<th>Name</th>
 					<th>Action</th>
 				</tr>
+				<tr>
+					<td><input ng-model="searchEmail" class="form-control"></td>
+					<td><input ng-model="searchName" class="form-control"></td>
+					<td></td>
+				</tr>
 			</thead>
 			<tbody>
-			<tr class="trUser" ng-repeat="sb in subsArray">
-				<td class="tdEmail">{{sb.userEmail}}</td>
-				<td	class="tdUser">{{sb.userName}}</td>
+			<tr class="trUser" ng-repeat="sb in subsArray | filter:searchEmail | filter:searchName">
+				<td class="tdEmail" ng-model="sb.userEmail">{{sb.userEmail}}</td>
+				<td	class="tdUser" ng-model="sb.userName">{{sb.userName}}</td>
 				<td class="tdUnsub"><button id="unsub" ng-click="unsubscribe(sb.userID, $index)" class="btn btn-primary btn-block">Unsubscribe</button></td>
 			</tr>
 			</tbody>

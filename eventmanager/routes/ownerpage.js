@@ -115,16 +115,24 @@ router.post('/getsubscribers', function(req, res) {
 router.post('/unsubscribeuser', function(req, res) {
 	if (req.session.data) 
 	{
-		console.log(req.body.userID);
-		DBConnection.unsubscribe(req.body.userID,req.session.data.evID,function(result){
-			if(result=="db_error")
+		DBConnection.getPersonById(req.body.userID,function(user){
+			if(user=="db_error")
 			{
 				res.status(500).send('Server problem, try again later!');
 			}
-			else
+			else 
 			{
-				res.send(result);
-				//emailSender.sendPassNotification(ev);														//send email success new event
+				DBConnection.unsubscribe(req.body.userID,req.session.data.evID,function(result){
+					if(result=="db_error")
+					{
+						res.status(500).send('Server problem, try again later!');
+					}
+					else
+					{
+						res.send(result);
+						emailSender.notifyUnsubscByOwner(user);
+					}
+				});
 			}
 		});
 	}
@@ -197,7 +205,7 @@ router.post('/updateevent', function(req, res) {
 								capacity	:	ev.capacity
 							}	
 							res.send(data);
-							//emailSender.sendPassNotification(ev);													//send email success new event								
+							emailSender.notifyEventUpdate(ev);							
 						}
 					});
 				}

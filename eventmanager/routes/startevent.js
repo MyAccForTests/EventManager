@@ -50,7 +50,7 @@ router.post('/create',upload.single('img'), function(req, res) {
 			else
 			{
 				console.log("inserted event, id: "+result.insertId);							
-				//emailSender.sendPassNotification(ev);											//send email success new event
+				emailSender.notifyEventCreation(ev);
 				console.log("event created");
 				res.redirect(servSettings.server.address+ev.sublnk);
 			}	
@@ -89,7 +89,7 @@ router.post('/newpass', function(req, res) {
 		{
 			res.setHeader('Content-Type', 'application/json');								
 			res.send(JSON.stringify(true));
-			//emailSender.sendPassNotification(ev);											//send email new password
+			emailSender.notifyNewPass(person);
 		}
 	});
 });

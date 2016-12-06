@@ -13,12 +13,12 @@
 				},
 
 "mail"	:		{
-					"host"	: 	"smtp.mail.ru",
+					"host"	: 	"metro705.hostmetro.com",
 					"port"	: 	"465",
 					"secure":	 "true",
 					"auth"	: 	{
-									"user"	: 	"event_notifier@mail.ru",
-									"pass"	: 	"NotifManager2016"
+									"user"	: 	"",
+									"pass"	: 	""
 								}
 				}
 }

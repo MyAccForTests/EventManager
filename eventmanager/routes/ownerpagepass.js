@@ -50,7 +50,7 @@ router.post('/newpass', function(req, res) {
 		{
 			res.setHeader('Content-Type', 'application/json');								
 			res.send(JSON.stringify(true));
-			//emailSender.sendPassNotification(ev);											//send email new password
+			emailSender.notifyNewPass(person);
 		}
 	});
 });

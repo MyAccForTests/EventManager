@@ -266,6 +266,7 @@ var sub=function()
 var unsub=function()
 {
 	$("#err").hide();
+	$("#passNew").show();
 	if($("#pass").is(":visible"))
 	{
 		var data = 
@@ -294,6 +295,7 @@ var unsub=function()
 						$("#email").hide();
 						$("#name").hide();
 						$("#err").hide();
+						$("#passNew").hide();
 						$("#email").prop("readonly",false);
 						setFreeSpace();
 						userID="";
