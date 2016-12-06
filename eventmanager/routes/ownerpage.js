@@ -124,7 +124,7 @@ router.post('/unsubscribeuser', function(req, res) {
 			else
 			{
 				res.send(result);
-				//emailSender.sendPassNotification(ev);											//send email success new event
+				//emailSender.sendPassNotification(ev);														//send email success new event
 			}
 		});
 	}
@@ -164,11 +164,12 @@ router.post('/updateevent', function(req, res) {
 				if(result=="db_error")
 				{
 					res.status(500).send('Server problem, try again later!');
+					if(img!="") {fs.unlink(img)}
 				}
 				else if(result=="capacity_limit")
 				{
 					res.end("capacity_limit");
-					fs.unlink(__dirname +'/../'+data.img);
+					if(img!="") {fs.unlink(img)}
 				}
 				else
 				{
@@ -179,9 +180,9 @@ router.post('/updateevent', function(req, res) {
 						}
 						else
 						{
-							if(result.oldimg!=null)
+							if(result.oldimg!=null&&result.oldimg!=img&&img!="")
 							{
-								fs.unlink(__dirname +'/../'+result.oldimg);
+								fs.unlink(result.oldimg);
 							}
 							var data=
 							{
@@ -196,7 +197,7 @@ router.post('/updateevent', function(req, res) {
 								capacity	:	ev.capacity
 							}	
 							res.send(data);
-							//emailSender.sendPassNotification(ev);																																//send email success update
+							//emailSender.sendPassNotification(ev);													//send email success new event								
 						}
 					});
 				}
@@ -204,9 +205,12 @@ router.post('/updateevent', function(req, res) {
 		});
 	req.pipe(busboy);
 	req.on("close", function(err) {
-        fstream.end();
-        fs.unlink(saveTo);
-        console.log("file load fail,file parts deleted");
+		if(img!="") 
+		{
+			fs.end();
+			fs.unlink(img);
+			console.log("File load fail,file parts deleted");
+		}
 		res.status(500).send('Error during request, try again later!');
     });
 	}

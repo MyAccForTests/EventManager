@@ -15,4 +15,3 @@ blade331@gmail.com - fipisi
 
 todo
 //sending mails
-//check max users vs new max users
