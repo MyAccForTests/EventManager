@@ -40,6 +40,8 @@ app.controller("nameController",['$scope', '$http',function($scope, $http) {
 }]);
 
 app.controller("manageEventController",['$scope', '$http',function($scope, $http) {
+	$("#manageeventRow").hide();
+	changeBar(10, true);
 	checkClicked();
 	$("#err").hide();
 	var now=new Date();
@@ -50,17 +52,24 @@ app.controller("manageEventController",['$scope', '$http',function($scope, $http
 	$("#datereg").attr("min", min.toISOString().slice(0,16));
 	$("#datereg").attr("max", max.toISOString().slice(0,16));
 	$scope.ev={};
+	changeBar(70, true);
 	$http({
 		method: "POST",
 		url: servAdress+"/getevent"
 	})
 	.then(function(response) {
+		changeBar(80, true);
 		$("#err").hide();
 		parseEvent($scope, response);
 		symbCount();
 		regDateSet();
+		changeBar(100, true);
+		$("#manageeventRow").show();
+		changeBar(0, false);
 		$scope.modify=function()
 		{
+			$("#manageeventRow").hide();
+			changeBar(10, true);
 			$("#err").hide();
 			var formData = new FormData();
 			var scdesc=$scope.ev.description.replace(new RegExp('\n', 'g'), '<br>');
@@ -80,6 +89,7 @@ app.controller("manageEventController",['$scope', '$http',function($scope, $http
 				formData.append('file', img);
 			}
 			formData.append('data', JSON.stringify(data));
+			changeBar(70, true);
 			var post=$.ajax({
 				url: servAdress+"/updateevent",
 				data: formData,
@@ -89,6 +99,7 @@ app.controller("manageEventController",['$scope', '$http',function($scope, $http
 			})
 			post.done(function(response)
 			{
+				changeBar(100, true);
 				if(response=="capacity_limit")
 				{
 					$("#errMessage").prop("innerHTML","Unable to update, capacity reached, first unsubscribe users");
@@ -102,38 +113,50 @@ app.controller("manageEventController",['$scope', '$http',function($scope, $http
 					$("#errMessage").prop("innerHTML","Successfully updated!");
 					$("#err").show();
 				}
+				$("#manageeventRow").show();
+				changeBar(0, false);
 			});
 			post.fail(function(response)
 			{
 				$("#errMessage").prop("innerHTML","Server error, try again later!");
 				$("#err").show();
+				changeBar(0, false);
 			});
 		}
 	},
 	function(err) {
 		$("#errMessage").prop("innerHTML","Server error, try again later!");
 		$("#err").show();
+		changeBar(0, false);
 	});
 }]);
 
 app.controller("subscribersController",['$scope', '$http',function($scope, $http) {
+	changeBar(10, true);
 	checkClicked();
+	$("#subscribersRow").hide();
 	$("#err").hide();
+	changeBar(70, true);
 	$http({
 		method: "POST",
 		url: servAdress+"/getsubscribers"
 	})
 	.then(function(response) {
+		changeBar(100, true);
 		$("#err").hide();
 		$scope.subsArray=response.data;
+		$("#subscribersRow").show();
+		changeBar(0, false);
 		$scope.unsubscribe=function(userID, index)
 		{
+			changeBar(0, true);
 			$http({
 				method: "POST",
 				url: servAdress+"/unsubscribeuser",
 				data : {userID	:	userID}
 			})
 			.then(function(response) {
+				changeBar(100, true);
 				if(response=="capacity_limit")
 				{
 					$("#errMessage").prop("innerHTML","Unable to update, capacity reached, first unsubscribe users");
@@ -145,16 +168,19 @@ app.controller("subscribersController",['$scope', '$http',function($scope, $http
 					$("#err").show();
 					$scope.subsArray.splice(index, 1);
 				}
+				changeBar(0, false);
 			},
 			function(err) {
 				$("#errMessage").prop("innerHTML","Server error, try again later!");
 				$("#err").show();
+				changeBar(0, false);
 			});
 		}
 	},
 	function(err) {
 		$("#errMessage").prop("innerHTML","Server error, try again later!");
 		$("#err").show();
+		changeBar(0, false);
 	});
 }]);
 
@@ -214,4 +240,17 @@ var parseEvent=function($scope, response)
 	$scope.ev.img=response.data.img==null?"../images/eventInviteImagePlaceholder.png":"../"+response.data.img.replace('\public','/').replace('\\','/');
 	$scope.ev.capacity=response.data.capacity==null?"":response.data.capacity;
 	$scope.ev.price=response.data.price==null?"":response.data.price;
+}
+
+var changeBar = function(percent, show)
+{
+	if(show===undefined||show==true)
+	{
+		$("#progress").show();
+	}
+	else if(show==false)
+	{
+		$("#progress").hide();
+	}
+	$("#progBar").css("width",percent+"%");
 }

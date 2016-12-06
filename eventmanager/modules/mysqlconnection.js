@@ -600,14 +600,7 @@ var updateEvent = function(ev, res)
 							{
 								if(ev.owner.name!="")
 								{
-									updatePersonName(ev.owner,function(result){
-										/*
-										if(result=="db_error")
-										{
-											res("db_error");
-										}
-										*/
-									});
+									updatePersonName(ev.owner,function(result){});
 								}
 								ev.title=ev.title==""?eve.title:ev.title;
 								ev.description=ev.description==""?eve.description:ev.description;
