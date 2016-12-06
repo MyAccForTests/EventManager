@@ -41,6 +41,7 @@ app.controller("nameController",['$scope', '$http',function($scope, $http) {
 
 app.controller("manageEventController",['$scope', '$http',function($scope, $http) {
 	checkClicked();
+	$("#err").hide();
 	var now=new Date();
 	var min=new Date(Date.UTC(now.getFullYear(),now.getMonth(),now.getDate(),now.getHours(),0,0));
 	var max=new Date(Date.UTC(now.getFullYear()+100,now.getMonth(),now.getDate(),now.getHours(),0,0));
@@ -117,6 +118,44 @@ app.controller("manageEventController",['$scope', '$http',function($scope, $http
 
 app.controller("subscribersController",['$scope', '$http',function($scope, $http) {
 	checkClicked();
+	$("#err").hide();
+	$http({
+		method: "POST",
+		url: servAdress+"/getsubscribers"
+	})
+	.then(function(response) {
+		$("#err").hide();
+		$scope.subsArray=response.data;
+		$scope.unsubscribe=function(userID, index)
+		{
+			$http({
+				method: "POST",
+				url: servAdress+"/unsubscribeuser",
+				data : {userID	:	userID}
+			})
+			.then(function(response) {
+				if(response=="capacity_limit")
+				{
+					$("#errMessage").prop("innerHTML","Unable to update, capacity reached, first unsubscribe users");
+					$("#err").show();
+				}
+				else
+				{
+					$("#errMessage").prop("innerHTML","User was unsubscribed!");
+					$("#err").show();
+					$scope.subsArray.splice(index, 1);
+				}
+			},
+			function(err) {
+				$("#errMessage").prop("innerHTML","Server error, try again later!");
+				$("#err").show();
+			});
+		}
+	},
+	function(err) {
+		$("#errMessage").prop("innerHTML","Server error, try again later!");
+		$("#err").show();
+	});
 }]);
 
 var exit = function()

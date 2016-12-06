@@ -584,7 +584,7 @@ var updateEvent = function(ev, res)
 				} 
 				else
 				{
-					if(/*ev.capacity<eve.capacity && ev.capacity!=null && eve.capacity!=null*/false)																	//todo subscribers count check
+					if(/*ev.capacity<eve.capacity && ev.capacity!=null && eve.capacity!=null*/false)			//todo subscribers count check
 					{
 						console.log(ev.capacity<eve.capacity)
 						console.log(ev.capacity!="")
@@ -638,7 +638,39 @@ var updateEvent = function(ev, res)
 	});
 }
 
+var getSubscribers = function(evID, res)
+{
+	pool.getConnection(function(err, connection) {
+		if(err) 
+		{
+			console.log('cannot estabilish connection for getSubscribers()');
+			res("db_error");
+		} 
+		else
+		{
+			console.log('connected for getSubscribers() as id '+connection.threadId);
+			connection.query('SELECT pers.userID, pers.userName, pers.userEmail FROM (SELECT id as evID, title as EvTitle FROM event) as eve LEFT OUTER JOIN (SELECT Event, Person FROM eventperson) as evp ON eve.evID=evp.Event LEFT OUTER JOIN (SELECT id as userID, Name as userName, Email as userEmail FROM person) as pers ON evp.Person=pers.userID WHERE eve.evID=?', [evID],
+			function(err, results, fields)
+			{
+				if(err) 
+				{
+					console.log('query from getSubscribers() unsuccessful');
+					connection.release();
+					console.log('connection released after bad query in getSubscribers()');
+					res("db_error");
+				}
+				else
+				{
+					connection.release();
+					console.log('connection released for getPersonById()');
+					res(results);
+				};
+			});
+		};
+	});
+}
 
+module.exports.getSubscribers = getSubscribers;
 module.exports.updateEvent = updateEvent;
 module.exports.getEventByID = getEventByID;
 module.exports.updatePersonPass = updatePersonPass;

@@ -92,6 +92,48 @@ router.post('/getevent', function(req, res) {
 	}
 });
 
+router.post('/getsubscribers', function(req, res) {
+	if (req.session.data) 
+	{
+		DBConnection.getSubscribers(req.session.data.evID,function(result){
+			if(result=="db_error")
+			{
+				res.status(500).send('Server problem, try again later!');
+			}
+			else
+			{
+				res.send(result);
+			}
+		});
+	}
+	else
+	{
+		exit(res);
+	}
+});
+
+router.post('/unsubscribeuser', function(req, res) {
+	if (req.session.data) 
+	{
+		console.log(req.body.userID);
+		DBConnection.unsubscribe(req.body.userID,req.session.data.evID,function(result){
+			if(result=="db_error")
+			{
+				res.status(500).send('Server problem, try again later!');
+			}
+			else
+			{
+				res.send(result);
+				//emailSender.sendPassNotification(ev);											//send email success new event
+			}
+		});
+	}
+	else
+	{
+		exit(res);
+	}
+});
+
 router.post('/updateevent', function(req, res) {
 	if (req.session.data) 
 	{
@@ -161,6 +203,12 @@ router.post('/updateevent', function(req, res) {
 			});
 		});
 	req.pipe(busboy);
+	req.on("close", function(err) {
+        fstream.end();
+        fs.unlink(saveTo);
+        console.log("file load fail,file parts deleted");
+		res.status(500).send('Error during request, try again later!');
+    });
 	}
 	else
 	{

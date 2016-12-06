@@ -10,15 +10,10 @@
 				</tr>
 			</thead>
 			<tbody>
-			<tr class="trUser">
-				<td class="tdEmail">Email</td>
-				<td	class="tdUser">User</td>
-				<td class="tdUnsub"><button id="unsub" class="btn btn-primary btn-block">Unsubscribe</button></td>
-			</tr>
-			<tr class="trUser">
-				<td class="tdEmail">Email</td>
-				<td	class="tdUser">User</td>
-				<td class="tdUnsub"><button id="unsub" class="btn btn-primary btn-block">Unsubscribe</button></td>
+			<tr class="trUser" ng-repeat="sb in subsArray">
+				<td class="tdEmail">{{sb.userEmail}}</td>
+				<td	class="tdUser">{{sb.userName}}</td>
+				<td class="tdUnsub"><button id="unsub" ng-click="unsubscribe(sb.userID, $index)" class="btn btn-primary btn-block">Unsubscribe</button></td>
 			</tr>
 			</tbody>
 		</table>

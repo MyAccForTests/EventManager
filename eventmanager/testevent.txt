@@ -14,6 +14,5 @@ http://localhost:6560/o/mKEVGYGw1480413880828
 blade331@gmail.com - fipisi
 
 todo
-//update event - client + server side (manageEventController)
-//subscribers list - all (subscribersController)
+//sending mails
 //check max users vs new max users
