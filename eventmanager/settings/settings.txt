@@ -5,16 +5,16 @@
 				},
 
 "database"	:	{
-					"host"     : "5.19.139.120",
-					"port"	   : "3306",
-					"user"     : "EventManagerUser",
-					"password" : "EventManagerUser2016",
-					"database" : "EventOrganiser"
+					"host"     : "",
+					"port"	   : "",
+					"user"     : "",
+					"password" : "",
+					"database" : ""
 				},
 
 "mail"	:		{
-					"host"	: 	"metro705.hostmetro.com",
-					"port"	: 	"465",
+					"host"	: 	"",
+					"port"	: 	"",
 					"secure":	 "true",
 					"auth"	: 	{
 									"user"	: 	"",

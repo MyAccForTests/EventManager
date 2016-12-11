@@ -1,1 +1,1 @@
-//for working condition - configurate email in settings
+//for working condition - configurate settings
